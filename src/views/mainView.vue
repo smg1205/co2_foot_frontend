@@ -2,6 +2,7 @@
 import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import { router } from "@/router/router";
+import HfHeader from "@/components/hf-header.vue";
 const route = useRoute();
 const currentRoute = ref(route.fullPath);
 
@@ -12,13 +13,13 @@ watch(
       router.push({'path': newPath})
     }
 );
-
 </script>
 
 <template>
+<!--  这里是主页面，进行路由跳转-->
     <el-container>
       <el-header>
-        <h1>Hello</h1>
+        <hf-header></hf-header>
       </el-header>
       <el-main>
         <RouterView></RouterView>
