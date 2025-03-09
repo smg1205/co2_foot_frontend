@@ -3,7 +3,6 @@ import HfUpload from "@/components/hf-upload.vue";
 </script>
 
 <template>
-<!--  这里是一开始进去的页面，感觉可以设计的稍微好看一点-->
   <div class="container">
     <h1>碳足迹，碳强度计算</h1>
     <h2>本网站可以根据上传的Excel表格进行碳足迹一集碳强度计算</h2>
