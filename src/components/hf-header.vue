@@ -1,24 +1,22 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { computed } from "vue";
-// 这是mainView的路由，可以修改样式或者干些别的
+
 // 获取 Vue Router 实例
 const router = useRouter();
 
 // 递归获取所有 isShow=true 的路由
-const extractVisibleRoutes = (routes, parentPath = "") => {
+const extractVisibleRoutes = (routes) => {
   let visibleRoutes = [];
 
   routes.forEach(route => {
-    const fullPath = parentPath + route.path; // 计算完整路径
-
     if (route.meta?.isShow) {
-      visibleRoutes.push({ name: route.name, path: fullPath });
+      visibleRoutes.push({ name: route.name, path: route.path });
     }
 
     // 递归处理子路由
     if (route.children) {
-      visibleRoutes = [...visibleRoutes, ...extractVisibleRoutes(route.children, fullPath)];
+      visibleRoutes = [...visibleRoutes, ...extractVisibleRoutes(route.children)];
     }
   });
 

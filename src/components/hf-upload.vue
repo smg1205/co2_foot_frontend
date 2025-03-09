@@ -1,27 +1,24 @@
 <script setup>
-import {ref} from "vue";
-import {uploadFiles} from "@/libs/FileUploadModule.js";
-import {goToMain} from "@/libs/RouterMove.js";
-// 这里是文件上传的组件，目前就是需要页面设计一下，和文件上传的js未完成
+import { ref } from "vue";
+import { useRouter } from "vue-router";  // 使用 useRouter 获取路由实例喵~
+const router = useRouter();
 const files = ref([]);
 
 const handleFiles = async (event) => {
   const newFiles = event.target.files || event.dataTransfer.files;
+  if (!newFiles.length) return;  // 如果没有文件则直接返回喵~
   files.value = [newFiles[0]];
-  await uploadFiles(files).then((res) => {
-    if(res){
-      goToMain();
-    }else{
-      alert("当前文件无效")
-    }
-  });
+  try {
+    await router.push({ path: "/main/show" });  // 异步跳转到目标路由喵~
+  } catch (error) {
+    console.error("跳转失败:", error);
+  }
 };
 
 const dragOver = (event) => {
   event.preventDefault();
   event.dataTransfer.dropEffect = "copy";
 };
-
 
 const dropFile = (event) => {
   event.preventDefault();

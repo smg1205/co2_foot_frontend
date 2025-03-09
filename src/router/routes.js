@@ -1,9 +1,8 @@
-// 这里是路由的js，只是存了一下路由，真正的路由实现再router.js中
 export const routes = [
     {
         path: "/",
         name: "首页",
-        meta:{
+        meta: {
             isShow: true
         },
         component: () => import("@/views/indexView.vue"),
@@ -11,25 +10,32 @@ export const routes = [
     {
         path: "/main",
         name: "展示页",
-        redirect: "/main/show",
-        children:[
+        component: () => import("@/views/mainView.vue"),
+        children: [
             {
-                path: "/main/show",
-                name: "各项指标",
-                meta:{
+                path: "/main/show", // 相对路径
+                name: "碳排放强度展示",
+                meta: {
                     isShow: true
                 },
                 component: () => import("@/views/firstShowView.vue")
             },
             {
-                path: "/main/info",
-                name: "详情展示",
-                meta:{
+                path: "/main/info", // 相对路径
+                name: "趋势图",
+                meta: {
                     isShow: true
                 },
-                component: () => import("@/views/secondShowPage.vue")
+                component: () => import("@/views/secondShowView.vue")
+            },
+            {
+                path: "/main/stan", // 相对路径
+                name: "指标及建议",
+                meta: {
+                    isShow: true
+                },
+                component: () => import("@/views/thirdShowView.vue")
             }
-        ],
-        component:() => import("@/views/mainView.vue"),
+        ]
     }
-]
+];
