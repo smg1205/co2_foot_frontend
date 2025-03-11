@@ -1,9 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import {ref, onMounted, onUnmounted} from "vue";
 import * as echarts from "echarts";
 
 const charts = ref([]);
-
 // 图表配置
 const chartConfigs = [
   {
@@ -29,7 +28,7 @@ const chartConfigs = [
 ];
 
 const titles = [
-  'n20、CH4、CO2随时间的变化趋势',
+  'N20、CH4、CO2随时间的变化趋势',
   '电耗、热耗、物耗随时间的变化趋势',
   'N20、CH4、CO2随污水处理量的变化趋势',
   '电耗、热耗、物耗随污水处理量的变化趋势',
@@ -37,36 +36,7 @@ const titles = [
   '低碳评价',
   'deepseek的建议'
 ];
-const adviceTemplates = {
-  excellent: {
-    score: [90, 100],
-    template: `👍 优秀运营状态建议：
-    1. 保持当前药剂投加量（COD去除率稳定在{COD}%）
-    2. 建议每日{time}进行设备预防性维护
-    3. 本月可尝试节能模式运行（预计节省{save}%）`
-  },
-  good: {
-    score: [75, 89],
-    template: `✨ 良好运营建议：
-    1. 优化曝气时间（当前峰值在{peak}时段）
-    2. 调整碳源投加量（建议减少{reduce}%）
-    3. 检查污泥浓度（当前MLSS：{mlss}g/L）`
-  },
-  average: {
-    score: [60, 74],
-    template: `⚠️ 改进建议：
-    1. 立即检查{device}运行状态
-    2. 建议增加化验频次（当前检测间隔：{interval}小时）
-    3. 考虑药剂替换方案（当前{chemical}效率下降）`
-  }
-};
-const lowCarbonScore = ref(85); // 初始分数
-const getScoreColor = () => {
-  if (lowCarbonScore.value >= 90) return '#52c41a'; // 绿色
-  if (lowCarbonScore.value >= 60) return '#1890ff'; // 蓝色
-  return '#ff4d4f'; // 红色
-};
-
+// 初始分数
 // 生成每日数据（365 天）
 const generateDailyData = () => {
   return Array.from({ length: 365 }, () => Math.floor(Math.random() * 50) + 10);
@@ -128,12 +98,6 @@ const initDynamicChart = (index) => {
 onMounted(() => {
   // 初始化前四个图表
   charts.value.slice(0, 4).forEach((_, index) => initDynamicChart(index));
-
-  // 初始化本月物质浓度图表
-  const monthlyChartEl = charts.value[4];
-  if (monthlyChartEl) {
-    initMonthlyChart(monthlyChartEl);
-  }
 });
 
 onUnmounted(() => {

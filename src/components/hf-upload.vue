@@ -29,7 +29,7 @@ const dropFile = (event) => {
 <template>
   <div class="upload-container">
     <div class="drop-zone" @dragover="dragOver" @drop="dropFile" @click="$refs.fileInput.click()">
-      <p>拖拽文件到这里 或 点击上传</p>
+      <p>拖拽excel文件到这里 或 点击上传</p>
       <input ref="fileInput" type="file" @change="handleFiles" hidden />
     </div>
     <ul v-if="files.length" class="file-list">
@@ -58,7 +58,7 @@ const dropFile = (event) => {
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: #f5f5f5; /* 淡灰色背景 */
+  background-color: rgba(100, 100, 100, 0.4); /* 淡灰色背景 */
   color: #555; /* 文字颜色更柔和 */
   font-size: 18px;
   font-weight: bold;
@@ -66,7 +66,7 @@ const dropFile = (event) => {
 
 /* 悬停效果 */
 .drop-zone:hover {
-  background-color: #e0e0e0; /* 悬浮时变亮 */
+  background-color: #808080; /* 悬浮时变亮 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* 轻微阴影 */
   transform: translateY(-2px);
 }

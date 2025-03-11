@@ -7,10 +7,10 @@ const charts = ref([]);
 // 图表类型配置
 const chartConfigs = [
   { type: 'line', smooth: true },   // NO2
-  { type: 'line', smooth: false },  // CH4（将特殊处理）
+  { type: 'line', smooth: true },  // CH4（将特殊处理）
   { type: 'bar' },                  // CO2
   { type: 'line', smooth: true },   // 物耗（絮凝剂）
-  { type: 'line', smooth: false },  // 电耗
+  { type: 'line', smooth: true },  // 电耗
   { type: 'line', smooth: true },   // 热耗
   { type: 'line', smooth: true }    // 物耗（碳源）
 ];
@@ -93,6 +93,15 @@ onUnmounted(() => {
     echarts.getInstanceByDom(chartEl)?.dispose();
   });
 });
+const titles = [
+  'N20、CH4、CO2随时间的变化趋势',
+  '电耗、热耗、物耗随时间的变化趋势',
+  'N20、CH4、CO2随污水处理量的变化趋势',
+  '电耗、热耗、物耗随污水处理量的变化趋势',
+  '本月主要物质浓度',
+  '低碳评价',
+  'deepseek的建议'
+];
 </script>
 
 <template>
@@ -102,6 +111,8 @@ onUnmounted(() => {
         'NO2直接碳排放',
         'CH4直接碳排放',
         'CO2直接碳排放',
+
+
         '物耗（絮凝剂）碳排放量',
         '电耗碳排放强度',
         '热耗碳排放强度',
@@ -115,6 +126,33 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.chart-container {
+  flex: 1;
+  width: 100%;
+  min-height: 150px;
+}
+
+.chart-title {
+  font-size: 16px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.bottom-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.chart-card {
+  background: white;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+}
 /* 保持原有样式不变 */
 .container {
   width: 98%;
