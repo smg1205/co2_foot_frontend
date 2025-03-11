@@ -2,14 +2,14 @@
 import { onMounted } from 'vue'
 import * as echarts from 'echarts'
 
-// 左侧三个图表
+// 左侧图表1：处理单位污水的耗电量喵~
 function initChartL1() {
   const el = document.getElementById('l1Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '处理单位污水的耗电量',
+      text: 'NO2直接碳排放',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
@@ -30,13 +30,14 @@ function initChartL1() {
   myChart.setOption(option)
 }
 
+// 左侧图表2：去除单位化学需氧量产生绝干污泥量喵~
 function initChartL2() {
   const el = document.getElementById('l2Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '去除单位化学需氧量产生绝干污泥量',
+      text: 'CH4直接碳排放',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
@@ -57,13 +58,14 @@ function initChartL2() {
   myChart.setOption(option)
 }
 
+// 左侧图表3：化学需氧量去除率喵~
 function initChartL3() {
   const el = document.getElementById('l3Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '化学需氧量去除率',
+      text: 'CO2直接碳排放',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
@@ -84,98 +86,107 @@ function initChartL3() {
   }
   myChart.setOption(option)
 }
-
-// 右侧三个图表
+// 右侧图表1：物耗（絮凝剂）碳排放量（曲线图）喵~
 function initChartR1() {
   const el = document.getElementById('r1Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '右侧图表1',
+      text: '物耗（絮凝剂）碳排放量',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
     tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
+    xAxis: { type: 'category', data: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
     yAxis: { type: 'value' },
-    series: [
-      {
-        data: [50, 60, 80, 70, 110, 90, 120],
-        type: 'line',
-        smooth: true
-      }
-    ]
+    series: [{
+      data: [100, 120, 110, 130, 90, 150, 140],
+      type: 'line',
+      smooth: true
+    }]
   }
   myChart.setOption(option)
 }
 
+// 右侧图表2：电耗碳排放强度（曲线图）喵~
 function initChartR2() {
   const el = document.getElementById('r2Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '右侧图表2',
+      text: '电耗碳排放强度',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
     tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-    },
+    xAxis: { type: 'category', data: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
     yAxis: { type: 'value' },
-    series: [
-      {
-        data: [100, 90, 120, 80, 70, 130, 140],
-        type: 'line',
-        smooth: true
-      }
-    ]
+    series: [{
+      data: [80, 95, 85, 100, 75, 110, 105],
+      type: 'line',
+      smooth: true
+    }]
   }
   myChart.setOption(option)
 }
 
+// 右侧图表3：热耗碳排放强度（曲线图）喵~
 function initChartR3() {
   const el = document.getElementById('r3Chart')
   if (!el) return
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '右侧图表3',
+      text: '热耗碳排放强度',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
     tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-    },
+    xAxis: { type: 'category', data: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
     yAxis: { type: 'value' },
-    series: [
-      {
-        data: [60, 65, 70, 75, 80, 85, 90],
-        type: 'line',
-        smooth: true,
-        areaStyle: {}
-      }
-    ]
+    series: [{
+      data: [60, 70, 65, 80, 55, 90, 85],
+      type: 'line',
+      smooth: true
+    }]
   }
   myChart.setOption(option)
 }
 
-// 页面加载后初始化6个图表
+// 右侧图表4：物耗（碳源）碳排放量（柱状图）喵~
+function initChartR4() {
+  const el = document.getElementById('r4Chart')
+  if (!el) return
+  const myChart = echarts.init(el)
+  const option = {
+    title: {
+      text: '物耗（碳源）碳排放量',
+      left: 'center',
+      textStyle: { fontSize: 14 }
+    },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
+    yAxis: { type: 'value' },
+    series: [{
+      data: [200, 180, 220, 210, 190, 230, 205],
+      type: 'bar'
+    }]
+  }
+  myChart.setOption(option)
+}
+// 页面加载后初始化所有图表喵~
 onMounted(() => {
+  // 左侧图表喵~
   initChartL1()
   initChartL2()
   initChartL3()
+  // 右侧图表喵~
   initChartR1()
   initChartR2()
   initChartR3()
+  initChartR4()
 })
 </script>
 
@@ -183,92 +194,121 @@ onMounted(() => {
   <div class="container">
     <div class="left-container">
       <div class="l1-container">
-        <div id="l1Chart" class="chart"></div>
+        <span id="l1Chart" class="chart"></span>
+        <span id="l2Chart" class="chart"></span>
       </div>
       <div class="l2-container">
-        <div id="l2Chart" class="chart"></div>
-      </div>
-      <div class="l3-container">
         <div id="l3Chart" class="chart"></div>
       </div>
     </div>
-
-    <div class="center-container">
-      <!-- 这里可以放其他组件或图表等喵~ -->
-    </div>
-
-    <!-- 右侧容器：再放三个图表 -->
     <div class="right-container">
-      <div class="r1-container">
+      <div class="grid-item">
         <div id="r1Chart" class="chart"></div>
       </div>
-      <div class="r2-container">
+      <div class="grid-item">
         <div id="r2Chart" class="chart"></div>
       </div>
-      <div class="r3-container">
+      <div class="grid-item">
         <div id="r3Chart" class="chart"></div>
       </div>
+      <div class="grid-item">
+        <div id="r4Chart" class="chart"></div>
+      </div>
+    </div>
+    <div class="footer-container">
+
     </div>
   </div>
 </template>
 
+
 <style scoped>
 .container {
-  width: 100vw;
+  width: 95vw;
   height: 100vh;
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
+  padding-top: 3vh;
 }
 
 .left-container {
-  background: #ff6363;
-  width: 30vw;
+  border-radius: 5px;
+  background: rgba(100, 100, 100, 0.3);
+  width: 45vw;
   float: left;
-  height: 100vh;
+  height: 59vh;
   box-sizing: border-box;
   overflow: hidden;
+  transition: transform 0.3s ease, background 0.3s ease; /* 添加过渡效果喵~ */
 }
 
-.center-container {
-  background: #b2b2b2;
-  float: left;
-  width: 40vw;
-  height: 100vh;
-  box-sizing: border-box;
+.left-container:hover {
+  background: rgba(100, 100, 100, 0.5);
+  transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
-/* 右侧容器：宽30vw，高100vh */
 .right-container {
-  background: #63faff;
-  width: 30vw;
+  /* 修改为flex列布局 */
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  background: rgb(92, 212, 102);
+  width: 48vw;
+  height: 59vh;
   float: right;
-  height: 100vh;
   box-sizing: border-box;
-  overflow: hidden; /* 避免子元素溢出喵~ */
+  overflow: hidden;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
-/* 左侧每个图表区域：占满父容器宽度(100%)，高度各占1/3 */
-.l1-container,
-.l2-container,
-.l3-container {
+
+.right-container:hover {
+  background: #40af5f;
+  transform: translateY(-5px);
+}
+
+.grid-item {
+  /* 每个项目占25%高度 */
+  flex: 0 0 25%;
+  box-sizing: border-box;
+  position: relative; /* 为图表定位提供基准 */
+}
+/* 确保图表填满容器 */
+.chart {
   width: 100%;
-  height: 33.33%;
+  height: 100%;
+  padding: 10px; /* 添加适当内边距 */
   box-sizing: border-box;
-  border-bottom: 1px solid #fff;
+}
+.l1-container {
+  padding-top: 20px;
+  width: 95%;
+  overflow: hidden;
+  height: 45%;
+  box-sizing: border-box;
+}
+.l2-container {
+  width: 95%;
+  height: 50%;
+  text-align: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 
-/* 右侧每个图表区域：同理占满父容器宽度、高度各占1/3 */
-.r1-container,
-.r2-container,
-.r3-container {
-  width: 100%;
-  height: 33.33%;
+.l1-container .chart {
+  float: left;
+  width: 50%;
+  height: 100%;
   box-sizing: border-box;
-  border-bottom: 1px solid #fff;
 }
 
-/* 图表本身铺满父容器 */
+/* l2-container 内的 .chart：取消浮动，宽度100%，占满整个容器喵~ */
+.l2-container .chart {
+  float: none;
+  width: 90%;
+  height: 100%;
+}
+
 .chart {
   width: 100%;
   height: 100%;
