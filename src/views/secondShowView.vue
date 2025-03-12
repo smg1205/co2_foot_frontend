@@ -3,8 +3,9 @@ import { ref, onMounted, onUnmounted } from "vue";
 import * as echarts from "echarts";
 
 const charts = ref([]);
+const currentData = ref(Array(4).fill([]));
+const currentDay = ref(Array(4).fill('1/1'));
 
-// 图表配置
 const chartConfigs = [
   {
     indicators: ['N20', 'CH4', 'CO2'],
@@ -29,62 +30,41 @@ const chartConfigs = [
 ];
 
 const titles = [
-  'n20、CH4、CO2随时间的变化趋势',
+  'N20、CH4、CO2随时间的变化趋势',
   '电耗、热耗、物耗随时间的变化趋势',
   'N20、CH4、CO2随污水处理量的变化趋势',
   '电耗、热耗、物耗随污水处理量的变化趋势',
-  '本月主要物质浓度',
-  '低碳评价',
-  'deepseek的建议'
 ];
-const adviceTemplates = {
-  excellent: {
-    score: [90, 100],
-    template: `👍 优秀运营状态建议：
-    1. 保持当前药剂投加量（COD去除率稳定在{COD}%）
-    2. 建议每日{time}进行设备预防性维护
-    3. 本月可尝试节能模式运行（预计节省{save}%）`
-  },
-  good: {
-    score: [75, 89],
-    template: `✨ 良好运营建议：
-    1. 优化曝气时间（当前峰值在{peak}时段）
-    2. 调整碳源投加量（建议减少{reduce}%）
-    3. 检查污泥浓度（当前MLSS：{mlss}g/L）`
-  },
-  average: {
-    score: [60, 74],
-    template: `⚠️ 改进建议：
-    1. 立即检查{device}运行状态
-    2. 建议增加化验频次（当前检测间隔：{interval}小时）
-    3. 考虑药剂替换方案（当前{chemical}效率下降）`
-  }
-};
-const lowCarbonScore = ref(85); // 初始分数
-const getScoreColor = () => {
-  if (lowCarbonScore.value >= 90) return '#52c41a'; // 绿色
-  if (lowCarbonScore.value >= 60) return '#1890ff'; // 蓝色
-  return '#ff4d4f'; // 红色
-};
 
-// 生成每日数据（365 天）
 const generateDailyData = () => {
   return Array.from({ length: 365 }, () => Math.floor(Math.random() * 50) + 10);
 };
 
-// 初始化动态图表
+const getDaysInMonth = (month) => {
+  return new Date(2023, month, 0).getDate();
+};
+
+const generateDaysArray = () => {
+  const days = [];
+  for (let month = 1; month <= 12; month++) {
+    const daysInMonth = getDaysInMonth(month);
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(`${month}/${day}`);
+    }
+  }
+  return days;
+};
+
 const initDynamicChart = (index) => {
   if (!charts.value[index]) return;
   const myChart = echarts.init(charts.value[index]);
   const config = chartConfigs[index];
 
-  // 生成 365 天的数据
   const fullData = config.indicators.map(() => generateDailyData());
-  const days = Array.from({ length: 365 }, (_, i) => `第${i + 1}天`);
+  const days = generateDaysArray();
 
-  // 初始显示前 30 天的数据
   let startIndex = 0;
-  let currentData = fullData.map(data => data.slice(startIndex, startIndex + 30));
+  let currentDataArray = fullData.map(data => data.slice(startIndex, startIndex + 30));
   let currentDays = days.slice(startIndex, startIndex + 30);
 
   const option = {
@@ -92,11 +72,11 @@ const initDynamicChart = (index) => {
     legend: { data: config.indicators, bottom: 0 },
     xAxis: { type: "category", data: currentDays },
     yAxis: { type: "value" },
-    grid: { top: 30, bottom: 50, left: 45, right: 20 },
+    grid: { top: 50, bottom: 50, left: 45, right: 20 },
     series: config.indicators.map((indicator, i) => ({
       name: indicator,
       type: 'line',
-      data: currentData[i],
+      data: currentDataArray[i],
       itemStyle: { color: config.colors[i] },
       lineStyle: { type: config.lineStyles[i] }
     }))
@@ -104,36 +84,29 @@ const initDynamicChart = (index) => {
 
   myChart.setOption(option);
 
-  // 动态更新数据
   const interval = setInterval(() => {
-    startIndex = (startIndex + 1) % 336; // 365 - 30 = 335，确保不越界
-    currentData = fullData.map(data => data.slice(startIndex, startIndex + 30));
+    startIndex = (startIndex + 1) % (days.length - 30);
+    currentDataArray = fullData.map(data => data.slice(startIndex, startIndex + 30));
     currentDays = days.slice(startIndex, startIndex + 30);
 
     myChart.setOption({
       xAxis: { data: currentDays },
-      series: config.indicators.map((_, i) => ({ data: currentData[i] }))
+      series: config.indicators.map((_, i) => ({ data: currentDataArray[i] }))
     });
-  }, 1000); // 每秒更新一次
 
-  // 清理定时器
+    currentData.value[index] = currentDataArray.map(data => data[data.length - 1]);
+    currentDay.value[index] = currentDays[currentDays.length - 1];
+
+  }, 1000);
+
   onUnmounted(() => clearInterval(interval));
 
   window.addEventListener("resize", myChart.resize);
   return myChart;
 };
 
-// ... existing code for monthly chart and DeepSeek advice ...
-
 onMounted(() => {
-  // 初始化前四个图表
   charts.value.slice(0, 4).forEach((_, index) => initDynamicChart(index));
-
-  // 初始化本月物质浓度图表
-  const monthlyChartEl = charts.value[4];
-  if (monthlyChartEl) {
-    initMonthlyChart(monthlyChartEl);
-  }
 });
 
 onUnmounted(() => {
@@ -146,32 +119,19 @@ onUnmounted(() => {
 <template>
   <div class="container">
     <div class="dashboard">
-      <!-- 上层四个图表 -->
       <div class="top-section">
         <div
             class="chart-card"
-            v-for="(title, index) in titles.slice(0,4)"
+            v-for="(title, index) in titles"
             :key="index"
         >
           <p class="chart-title">{{ title }}</p>
-          <div ref="charts" class="chart-container"></div>
-        </div>
-      </div>
-
-      <!-- 下层三个图表 -->
-      <div class="bottom-section">
-        <div
-            class="chart-card"
-            v-for="(title, index) in titles.slice(4)"
-            :key="index+4"
-        >
-          <p class="chart-title">{{ title }}</p>
-          <div v-if="index === 2" class="chart-container">
-            <p>评价按照分数范围生成。</p>
-            <p>{{ deepSeekAdvice }}</p>
-          </div>
-          <div v-else ref="charts" class="chart-container">
-            <p v-if="index === 1">低碳评价包含低碳运行评价分数和碳排放强度核算两个指标。</p>
+          <div class="chart-container" ref="charts"></div>
+          <div class="max-value">
+            <p class="current-day">{{ currentDay[index] }}</p>
+            <span v-for="(indicator, i) in chartConfigs[index].indicators" :key="i" class="indicator">
+              {{ indicator }}（MAX）：{{ currentData[index][i] || 0 }}
+            </span>
           </div>
         </div>
       </div>
@@ -180,9 +140,16 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* 保持原有样式不变 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .container {
-  width: 98%;
+  width: 100%;
+  height: 100%;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -199,27 +166,22 @@ onUnmounted(() => {
   gap: 16px;
 }
 
-.bottom-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
 .chart-card {
   background: white;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  text-align: center;
-  height: 200px;
   display: flex;
   flex-direction: column;
+  height: 300px;
+  position: relative;
 }
 
 .chart-title {
-  font-size: 16px;
-  margin-bottom: 8px;
-  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .chart-container {
@@ -228,17 +190,39 @@ onUnmounted(() => {
   min-height: 150px;
 }
 
+.max-value {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+}
+
+.current-day {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.indicator {
+  font-size: 10px;
+  color: #333;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .top-section {
     grid-template-columns: 1fr;
-  }
-
-  .bottom-section {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-card {
-    height: auto;
   }
 }
 </style>
