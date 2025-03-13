@@ -147,6 +147,11 @@ html, body {
   height: 100%;
 }
 
+body {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 144, 255, 0.8)), url('@/assets/Background.png') no-repeat center center fixed; /* 渐变背景和背景图 */
+  background-size: cover; /* 背景图覆盖整个页面 */
+}
+
 .container {
   width: 100%;
   height: 100%;
@@ -164,17 +169,24 @@ html, body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  height: 100%; /* 确保组件占满父容器 */
 }
 
 .chart-card {
-  background: white;
+  background: rgba(255, 255, 255, 1); /* 设置为白色背景 */
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* 增强阴影 */
+  border-radius: 12px; /* 增加圆角 */
   display: flex;
   flex-direction: column;
   height: 300px;
   position: relative;
+  overflow: hidden; /* 防止内容溢出 */
+  transition: transform 0.3s; /* 添加过渡效果 */
+}
+
+.chart-card:hover {
+  transform: scale(1.02); /* 悬停时放大效果 */
 }
 
 .chart-title {
@@ -182,6 +194,7 @@ html, body {
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
+  color: black; /* 将标题颜色改为黑色 */
 }
 
 .chart-container {
@@ -194,7 +207,7 @@ html, body {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.2); /* 半透明背景 */
   padding: 5px;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -208,14 +221,14 @@ html, body {
 
 .current-day {
   font-size: 14px;
-  color: #555;
+  color: black; /* 将当前日期字体颜色改为黑色 */
   margin-bottom: 4px;
   text-align: center;
 }
 
 .indicator {
   font-size: 10px;
-  color: #333;
+  color: #00BFFF; /* 使用亮蓝色 */
   margin-bottom: 2px;
   text-align: center;
 }
@@ -226,3 +239,11 @@ html, body {
   }
 }
 </style>
+
+
+
+
+
+
+
+
