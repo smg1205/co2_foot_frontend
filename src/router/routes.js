@@ -15,7 +15,7 @@ export const routes = [
                 path: "show", // 相对路径
                 name: "碳排放强度展示",
                 meta: { isShow: true },
-                component: () => import("@/views/firstShowView.vue")
+                component: () => import("@/views/firstShowViewEdit.vue")
             },
             {
                 path: "info", // 相对路径
@@ -29,13 +29,6 @@ export const routes = [
                 meta: { isShow: true },
                 component: () => import("@/views/thirdShowView.vue")
             },
-            {
-                path: "new", // 相对路径
-                name: "第一页重构",
-                meta: { isShow: true },
-                component: () => import("@/views/firstShowViewEdit.vue")
-            }
-
         ]
     }
 ];
