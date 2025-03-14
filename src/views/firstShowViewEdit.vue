@@ -200,23 +200,22 @@ onMounted(() => {
       <div class="l2-container">
         <div id="l3Chart" class="chart"></div>
       </div>
-    </div>
-    <div class="right-container">
-      <div class="grid-item">
-        <div id="r1Chart" class="chart"></div>
+      <div class="l3-container">
+        <div class="box">日历</div>
+        <div class="box">评价</div>
+        <div class="box">deepseek</div>
       </div>
-      <div class="grid-item">
+    </div>
+
+    <div class="right-container">
+      <div class="r-container">
+        <div id="r1Chart" class="chart"></div>
         <div id="r2Chart" class="chart"></div>
       </div>
-      <div class="grid-item">
+      <div class="r-container">
         <div id="r3Chart" class="chart"></div>
-      </div>
-      <div class="grid-item">
         <div id="r4Chart" class="chart"></div>
       </div>
-    </div>
-    <div class="footer-container">
-
     </div>
   </div>
 </template>
@@ -224,22 +223,22 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  width: 95vw;
-  height: 100vh;
-  box-sizing: border-box;
-  margin: 0;
-  padding-top: 3vh;
+  display: flex;
+  gap: 2vw;
+  padding: 2vh 2vw;
+  height: 96vh;
+  background: #f0f0f0;
 }
 
 .left-container {
-  border-radius: 5px;
+  flex: 0 0 58%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
   background: rgba(100, 100, 100, 0.3);
-  width: 45vw;
-  float: left;
-  height: 59vh;
-  box-sizing: border-box;
-  overflow: hidden;
-  transition: transform 0.3s ease, background 0.3s ease; /* 添加过渡效果喵~ */
+  border-radius: 8px;
+  padding: 1.5vh;
+  transition: transform 0.3s, background 0.3s;
 }
 
 .left-container:hover {
@@ -254,7 +253,7 @@ onMounted(() => {
   border-radius: 5px;
   background: rgb(92, 212, 102);
   width: 48vw;
-  height: 59vh;
+  height: 95vh;
   float: right;
   box-sizing: border-box;
   overflow: hidden;
@@ -267,20 +266,21 @@ onMounted(() => {
   transform: translateY(-5px);
 }
 
-.grid-item {
-  /* 每个项目占25%高度 */
-  flex: 0 0 25%;
-  box-sizing: border-box;
-  position: relative; /* 为图表定位提供基准 */
-}
 /* 确保图表填满容器 */
 .chart {
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 55%;
   padding: 10px; /* 添加适当内边距 */
   box-sizing: border-box;
 }
 .l1-container {
+  padding-top: 20px;
+  width: 100%;
+  overflow: hidden;
+  height: 50%;
+  box-sizing: border-box;
+}
+.r-container {
   padding-top: 20px;
   width: 95%;
   overflow: hidden;
@@ -288,11 +288,31 @@ onMounted(() => {
   box-sizing: border-box;
 }
 .l2-container {
-  width: 95%;
+  width: 100%;
   height: 50%;
   text-align: center;
   align-items: center;
   box-sizing: border-box;
+}
+.l3-container {
+  display: flex;
+  justify-content: space-evenly; /* 均匀分布 */
+  align-items: center; /* 垂直居中 */
+  width: 100%;
+  height: 30vh; /* 明确设置高度 */
+  box-sizing: border-box;
+  padding: 100px;
+}
+
+.box {
+  width: 10vw;  /* 设置适当宽度 */
+  height: 80px; /* 设置适当高度 */
+  border: 2px solid #6d6d6d; /* 添加边框 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .l1-container .chart {
@@ -301,8 +321,12 @@ onMounted(() => {
   height: 100%;
   box-sizing: border-box;
 }
-
-/* l2-container 内的 .chart：取消浮动，宽度100%，占满整个容器喵~ */
+.r-container .chart {
+  float: left;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+}
 .l2-container .chart {
   float: none;
   width: 90%;
