@@ -148,9 +148,27 @@ onMounted(() => {
   initChartR1()
   initChartR2()
 })
-
 // 初始化中国地图
 let mapChart = null
+let pointIndex = 0; // 当前显示的点索引
+const allPoints = [ // 所有点的数据
+  [114.52, 38.05, 120, '石家庄'],
+  [116.46, 39.92, 100, '北京'],
+  [121.48, 31.22, 90, '上海'],
+  [113.23, 23.16, 80, '广州'],
+  [117.20, 39.08, 95, '天津'],
+  [106.55, 29.57, 85, '重庆'],
+  [126.63, 45.75, 75, '哈尔滨'],
+  [125.32, 43.90, 70, '长春'],
+  [123.43, 41.80, 65, '沈阳'],
+  [111.65, 40.82, 60, '呼和浩特'],
+  [112.55, 37.87, 55, '太原'],
+  [113.62, 34.75, 50, '郑州'],
+  [108.93, 34.27, 45, '西安'],
+  [103.82, 36.06, 40, '兰州'],
+  [101.77, 36.62, 35, '西宁']
+];
+
 const initChinaMap = () => {
   const dom = document.getElementById('chinaMap')
   if (!dom) return
@@ -172,7 +190,7 @@ const initChinaMap = () => {
           },
           geo: {
             map: 'china',
-            roam: true, // 允许缩放拖动
+            roam: false, // 允许缩放拖动
             label: {
               show: true,
               color: '#4D4D4D'
@@ -194,23 +212,7 @@ const initChinaMap = () => {
           series: [{
             type: 'effectScatter',
             coordinateSystem: 'geo',
-            data: [ // 改为二维数组格式
-              [114.52, 38.05, 120, '石家庄'], // 河北省会
-              [116.46, 39.92, 100, '北京'],
-              [121.48, 31.22, 90, '上海'],
-              [113.23, 23.16, 80, '广州'],
-              [117.20, 39.08, 95, '天津'],
-              [106.55, 29.57, 85, '重庆'],
-              [126.63, 45.75, 75, '哈尔滨'],
-              [125.32, 43.90, 70, '长春'],
-              [123.43, 41.80, 65, '沈阳'],
-              [111.65, 40.82, 60, '呼和浩特'],
-              [112.55, 37.87, 55, '太原'],
-              [113.62, 34.75, 50, '郑州'],
-              [108.93, 34.27, 45, '西安'],
-              [103.82, 36.06, 40, '兰州'],
-              [101.77, 36.62, 35, '西宁']
-            ],
+            data: [],
             encode: { // 调整编码映射
               lng: 0,    // 第一列为经度
               lat: 1,    // 第二列为纬度
@@ -220,12 +222,89 @@ const initChinaMap = () => {
             rippleEffect: {
               brushType: 'stroke',
               scale: 4
+            },
+            // 设置点的大小
+            symbolSize: 7, // 点的大小
+            //亮一下
+            itemStyle: {
+              color: '#ffcc00' // 默认颜色（暗蓝色）
+            },
+            emphasis: {
+              itemStyle: {
+                color: '#ffea00', // 高亮颜色
+                shadowBlur: 20,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+                shadowColor: 'blue',
+                opacity: 1
+              }
             }
           }]
         }
-        mapChart.setOption(option)
-      })
-}
+        mapChart.setOption(option);
+
+        // 开始动画
+        startAnimation();
+      });
+};
+
+// 动画函数
+const startAnimation = () => {
+  const series = mapChart.getOption().series[0];
+  const newData = [...series.data];
+
+  // 每次添加一个点
+  if (pointIndex < allPoints.length) {
+    const newPoint = {
+      value: allPoints[pointIndex],
+      itemStyle: { color: '#ffea00' } // 初始亮蓝色
+    };
+    newData.push(newPoint);
+    const currentIndex = newData.length - 1;
+    pointIndex++;
+    // 更新图表
+// 更新图表
+    mapChart.setOption({ series: [{ data: newData }] });
+
+    // 两秒后将点颜色变为暗蓝色
+    setTimeout(() => {
+      const currentData = [...mapChart.getOption().series[0].data];
+      if (currentIndex < currentData.length && currentData[currentIndex]) {
+        currentData[currentIndex] = {
+          ...currentData[currentIndex],
+          itemStyle: { color: '#ffcc00' }
+        };
+        mapChart.setOption({ series: [{ data: currentData }] });
+      }
+    }, 2000);
+
+
+  } else {
+    // 所有点都显示后，重置索引，准备下一轮
+    pointIndex = 0;
+    // 让所有点消失
+    setTimeout(() => {
+      mapChart.setOption({
+        series: [{
+          data: []
+        }]
+      });
+      // 重新开始动画
+      setTimeout(startAnimation, 1000);
+    }, 3000);
+    return;
+  }
+
+  // 更新图表
+  mapChart.setOption({
+    series: [{
+      data: newData
+    }]
+  });
+
+  // 设置下一个点的显示时间
+  setTimeout(startAnimation, 1000);
+};
 
 // 自适应大小
 const resizeHandler = () => {
