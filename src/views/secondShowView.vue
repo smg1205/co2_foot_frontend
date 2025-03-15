@@ -7,10 +7,10 @@ const currentData = ref(Array(4).fill([]));
 const currentDay = ref(Array(4).fill('1/1'));
 
 const chartConfigs = [
-  { indicators: ['BOD', 'COD'], colors: ['#00BFFF', '#1E90FF'], lineStyles: ['solid', 'dashed'] },
-  { indicators: ['TN'], colors: ['#32CD32'], lineStyles: ['solid'] },
-  { indicators: ['N20', 'CH4', 'CO2'], colors: ['#FFD700', '#FF6347', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮红色、亮青色
-  { indicators: ['电耗', '热耗', '物耗'], colors: ['#9370DB', '#FF69B4', '#FFA07A'], lineStyles: ['solid', 'dashed', 'dotted'] } // 亮紫色、亮粉色、亮橙色
+  { indicators: ['BOD', 'COD'], colors: [' #FFFF00',' #00FFFF'], lineStyles: ['solid', 'dashed'] },
+  { indicators: ['TN'], colors: ['#FF007F'], lineStyles: ['solid'] },
+  { indicators: ['N20', 'CH4', 'CO2'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮粉色、亮青色
+  { indicators: ['电耗', '热耗', '物耗'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] } // 亮黄色、亮粉色、亮青色
 ];
 
 const titles = [
@@ -19,7 +19,6 @@ const titles = [
   'N20、CH4、CO2随污水处理量的变化趋势',
   '电耗、热耗、物耗随污水处理量的变化趋势',
 ];
-
 
 const fixedBODCODValues = {
   BOD: { max: 201, min: 61 },
@@ -62,7 +61,6 @@ const initDynamicChart = (index) => {
   let currentDataArray = fullData.map(data => data.slice(startIndex, startIndex + 30));
   let currentXAxisData = xAxisData.slice(startIndex, startIndex + 30);
 
-
   const isBarChart = index < 2;
   const seriesType = isBarChart ? 'bar' : 'line';
 
@@ -75,11 +73,28 @@ const initDynamicChart = (index) => {
       name: isWaterVolumeChart ? '水量 (m³)' : '日期',
       nameLocation: 'center',
       nameGap: 25,
-      axisLabel: { color: '#fff' }
+      axisLabel: {
+        color: '#fff',
+        fontSize: 12
+      },
+      nameTextStyle: {
+        color: '#fff',
+        fontSize: 12
+      }
     },
     yAxis: {
       type: "value",
-      axisLabel: { color: '#fff' }
+      name: index < 2 ? '削减量 (g/d)' : '碳排放强度 (kg CO₂e)',
+      nameLocation: 'center',
+      nameGap: 25,
+      axisLabel: {
+        color: '#fff',
+        fontSize: 12
+      },
+      nameTextStyle: {
+        color: '#fff',
+        fontSize: 12
+      }
     },
     grid: { top: 40, bottom: 70, left: 45, right: 20 },
     series: config.indicators.map((indicator, i) => ({
@@ -162,10 +177,25 @@ onUnmounted(() => {
 
 <style scoped>
 .container {
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 10px;
   box-sizing: border-box;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -1;
 }
 
 .dashboard {
@@ -182,7 +212,7 @@ onUnmounted(() => {
 }
 
 .chart-card {
-  background: linear-gradient(135deg, rgba(25, 25, 112, 0.6), rgba(173, 216, 230, 0.3));
+  background: linear-gradient(135deg, rgba(25, 25, 112, 0.5), rgba(173, 216, 230, 0.3));
   padding: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   border-radius: 12px;
@@ -238,7 +268,7 @@ onUnmounted(() => {
 
 .indicator {
   font-size: 10px;
-  color: #00BFFF;
+  color: white;
   margin-bottom: 2px;
   text-align: center;
   white-space: nowrap;
