@@ -23,5 +23,6 @@ const back_img = "src/static/img_12.jpg";
   background-size: cover; /* 让图片铺满整个区域 */
   background-position: center; /* 图片居中 */
   background-repeat: no-repeat; /* 禁止图片重复 */
+  cursor: pointer;
 }
 </style>

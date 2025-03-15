@@ -208,10 +208,11 @@ onMounted(() => {
   initChartR3()
   initChartR4()
 })
+const backImg = "/src/static/img_1.png";
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
     <div class="main-content">
       <div class="left-container">
         <div class="l1-container">
@@ -236,21 +237,31 @@ onMounted(() => {
     </div>
 
     <div class="footer-container">
-      <div>
+      <div style="color: #fff;">
         <h3>日历</h3>
         <h4>当前浓度最大物质</h4>
         <h4>浓度值为 </h4>
       </div>
-      <div>
+      <div style="color: #fff;">
         <h3>低碳运行评价</h3>
-        <h3>
-          低碳运行评价分数 100
-        </h3>
-        <h3>
-          碳排放强度核算 98
-        </h3>
+
+        <span>
+          低碳运行评价分数 <span class="count">100</span>
+        </span>
+        <span>
+          碳排放强度核算 <span class="count">100</span>
+        </span>
+        <hr>
+        <el-tooltip
+            effect="dark"
+            content="当前排名为第一名"
+            placement="right"
+        >
+          <el-button>查看当前排名</el-button>
+        </el-tooltip>
+
       </div>
-      <div>
+      <div style="color: #fff;">
         <h3>deepseek</h3>
         <h3>当前暂无建议</h3>
       </div>
@@ -260,6 +271,11 @@ onMounted(() => {
 
 
 <style scoped>
+.count{
+  border-radius: 5px;
+  background-color: #409eff;
+  color: #fff;
+}
 .footer-container {
   width: 98%;
   height: 30vh;
@@ -275,19 +291,19 @@ onMounted(() => {
   flex: 1; /* 让 3 个 div 等宽 */
   height: 20vh;
   text-align: center; /* 文本居中 */
-  color: #000000; /* 文字颜色 */
   font-size: 18px;
   padding: 10px; /* 添加适当的内边距 */
-  border: 1px solid #000000; /* 可选：添加边框查看效果 */
 }
 
 .container {
   display: flex;
-  flex-direction: column; /* 让子元素纵向排列 */
+  flex-direction: column;
   gap: 2vh;
   padding: 2vh 2vw;
   height: 96vh;
-  background: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .main-content {
   display: flex;
@@ -300,14 +316,14 @@ onMounted(() => {
   flex-direction: column;
   height: 67vh;
   gap: 1.5vh;
-  background: rgba(100, 100, 100, 0.3);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   padding: 1.5vh;
   transition: transform 0.3s, background 0.3s;
 }
 
 .left-container:hover {
-  background: rgba(100, 100, 100, 0.5);
+  background: rgb(54, 190, 209);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
@@ -316,7 +332,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  background: rgb(92, 212, 102);
+  background: rgba(0, 0, 0, 0.4);
   width: 55vw;
   height: 70vh;
   float: right;
@@ -327,7 +343,7 @@ onMounted(() => {
 
 
 .right-container:hover {
-  background: #40af5f;
+  background: #00ab2e;
   transform: translateY(-5px);
 }
 

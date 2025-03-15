@@ -105,10 +105,12 @@ onUnmounted(() => {
     echarts.getInstanceByDom(chartEl)?.dispose();
   });
 });
+
+const backImg = "/src/static/img_1.png";
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
     <div class="dashboard">
       <!-- 上层四个图表 -->
       <div class="top-section">
@@ -121,24 +123,6 @@ onUnmounted(() => {
           <div ref="charts" class="chart-container"></div>
         </div>
       </div>
-
-      <!-- 下层三个图表 -->
-      <div class="bottom-section">
-        <div
-            class="chart-card"
-            v-for="(title, index) in titles.slice(4)"
-            :key="index+4"
-        >
-          <p class="chart-title">{{ title }}</p>
-          <div v-if="index === 2" class="chart-container">
-            <p>评价按照分数范围生成。</p>
-            <p>{{ deepSeekAdvice }}</p>
-          </div>
-          <div v-else ref="charts" class="chart-container">
-            <p v-if="index === 1">低碳评价包含低碳运行评价分数和碳排放强度核算两个指标。</p>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -147,6 +131,7 @@ onUnmounted(() => {
 /* 保持原有样式不变 */
 .container {
   width: 98%;
+  height: 85vh;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -170,7 +155,7 @@ onUnmounted(() => {
 }
 
 .chart-card {
-  background: white;
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
