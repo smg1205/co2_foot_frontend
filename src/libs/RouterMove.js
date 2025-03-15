@@ -4,5 +4,8 @@ import {router} from "@/router/router.js";
 function goToMain(){
     router.push("/main").then(r => r)
 }
+function goToTran(){
+    router.push("/main/tran").then(r => r)
+}
 
-export {goToMain}
+export {goToMain, goToTran}
