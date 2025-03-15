@@ -148,9 +148,27 @@ onMounted(() => {
   initChartR1()
   initChartR2()
 })
-
 // 初始化中国地图
 let mapChart = null
+let pointIndex = 0; // 当前显示的点索引
+const allPoints = [ // 所有点的数据
+  [114.52, 38.05, 120, '石家庄'],
+  [116.46, 39.92, 100, '北京'],
+  [121.48, 31.22, 90, '上海'],
+  [113.23, 23.16, 80, '广州'],
+  [117.20, 39.08, 95, '天津'],
+  [106.55, 29.57, 85, '重庆'],
+  [126.63, 45.75, 75, '哈尔滨'],
+  [125.32, 43.90, 70, '长春'],
+  [123.43, 41.80, 65, '沈阳'],
+  [111.65, 40.82, 60, '呼和浩特'],
+  [112.55, 37.87, 55, '太原'],
+  [113.62, 34.75, 50, '郑州'],
+  [108.93, 34.27, 45, '西安'],
+  [103.82, 36.06, 40, '兰州'],
+  [101.77, 36.62, 35, '西宁']
+];
+
 const initChinaMap = () => {
   const dom = document.getElementById('chinaMap')
   if (!dom) return
@@ -172,7 +190,7 @@ const initChinaMap = () => {
           },
           geo: {
             map: 'china',
-            roam: true, // 允许缩放拖动
+            roam: false, // 允许缩放拖动
             label: {
               show: true,
               color: '#4D4D4D'
@@ -194,23 +212,7 @@ const initChinaMap = () => {
           series: [{
             type: 'effectScatter',
             coordinateSystem: 'geo',
-            data: [ // 改为二维数组格式
-              [114.52, 38.05, 120, '石家庄'], // 河北省会
-              [116.46, 39.92, 100, '北京'],
-              [121.48, 31.22, 90, '上海'],
-              [113.23, 23.16, 80, '广州'],
-              [117.20, 39.08, 95, '天津'],
-              [106.55, 29.57, 85, '重庆'],
-              [126.63, 45.75, 75, '哈尔滨'],
-              [125.32, 43.90, 70, '长春'],
-              [123.43, 41.80, 65, '沈阳'],
-              [111.65, 40.82, 60, '呼和浩特'],
-              [112.55, 37.87, 55, '太原'],
-              [113.62, 34.75, 50, '郑州'],
-              [108.93, 34.27, 45, '西安'],
-              [103.82, 36.06, 40, '兰州'],
-              [101.77, 36.62, 35, '西宁']
-            ],
+            data: [],
             encode: { // 调整编码映射
               lng: 0,    // 第一列为经度
               lat: 1,    // 第二列为纬度
@@ -220,12 +222,89 @@ const initChinaMap = () => {
             rippleEffect: {
               brushType: 'stroke',
               scale: 4
+            },
+            // 设置点的大小
+            symbolSize: 7, // 点的大小
+            //亮一下
+            itemStyle: {
+              color: '#ffcc00' // 默认颜色（暗蓝色）
+            },
+            emphasis: {
+              itemStyle: {
+                color: '#ffea00', // 高亮颜色
+                shadowBlur: 20,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+                shadowColor: 'blue',
+                opacity: 1
+              }
             }
           }]
         }
-        mapChart.setOption(option)
-      })
-}
+        mapChart.setOption(option);
+
+        // 开始动画
+        startAnimation();
+      });
+};
+
+// 动画函数
+const startAnimation = () => {
+  const series = mapChart.getOption().series[0];
+  const newData = [...series.data];
+
+  // 每次添加一个点
+  if (pointIndex < allPoints.length) {
+    const newPoint = {
+      value: allPoints[pointIndex],
+      itemStyle: { color: '#ffea00' } // 初始亮蓝色
+    };
+    newData.push(newPoint);
+    const currentIndex = newData.length - 1;
+    pointIndex++;
+    // 更新图表
+// 更新图表
+    mapChart.setOption({ series: [{ data: newData }] });
+
+    // 两秒后将点颜色变为暗蓝色
+    setTimeout(() => {
+      const currentData = [...mapChart.getOption().series[0].data];
+      if (currentIndex < currentData.length && currentData[currentIndex]) {
+        currentData[currentIndex] = {
+          ...currentData[currentIndex],
+          itemStyle: { color: '#ffcc00' }
+        };
+        mapChart.setOption({ series: [{ data: currentData }] });
+      }
+    }, 2000);
+
+
+  } else {
+    // 所有点都显示后，重置索引，准备下一轮
+    pointIndex = 0;
+    // 让所有点消失
+    setTimeout(() => {
+      mapChart.setOption({
+        series: [{
+          data: []
+        }]
+      });
+      // 重新开始动画
+      setTimeout(startAnimation, 1000);
+    }, 3000);
+    return;
+  }
+
+  // 更新图表
+  mapChart.setOption({
+    series: [{
+      data: newData
+    }]
+  });
+
+  // 设置下一个点的显示时间
+  setTimeout(startAnimation, 1000);
+};
 
 // 自适应大小
 const resizeHandler = () => {
@@ -241,13 +320,11 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeHandler)
   mapChart?.dispose()
 })
-const backImg = "/src/static/img_1.png";
-
 </script>
 
 <template>
   <!-- 新增顶部栏 -->
-  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
+  <div class="container">
     <div class="top-bar">
       <div v-for="n in 5" :key="n" class="indicator">
         指标 {{ n }}
@@ -317,9 +394,7 @@ const backImg = "/src/static/img_1.png";
           <div id="r2Chart" class="chart"></div>
         </div>
         <div class="r3-container">
-          <div>
             <h1>DeepSeek建议</h1>
-          </div>
         </div>
       </div>
     </div>
@@ -340,20 +415,20 @@ const backImg = "/src/static/img_1.png";
 
 .indicator {
   flex: 1;
-  background-color: rgba(4, 2, 2, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #606266;
+  color: #000000;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   transition: transform 0.2s;
 }
 
 .indicator:hover {
   transform: translateY(-2px);
-  background-color: rgb(83, 184, 187);
+  background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(136, 136, 136, 0.12);
 }
 
@@ -398,6 +473,8 @@ const backImg = "/src/static/img_1.png";
 .l3-container {
   width: 98%;
   height: 33.33%;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
   box-sizing: border-box;
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
@@ -405,7 +482,7 @@ const backImg = "/src/static/img_1.png";
 .l1-container:hover,
 .l2-container:hover,
 .l3-container:hover {
-  background: rgba(246, 244, 244, 0.5);
+  background: rgba(255, 255, 255, 1);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
@@ -413,9 +490,11 @@ const backImg = "/src/static/img_1.png";
   text-align: center;
   color: #fff;
   width: 100%;
-  height: 33.33%;
+  height: 30%;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #fff;
+  border-radius: 5px;
   transition: transform 0.3s, background 0.3s;
 }
 /* 右侧每个图表区域：同理占满父容器宽度、高度各占1/3 */
@@ -424,13 +503,15 @@ const backImg = "/src/static/img_1.png";
   width: 100%;
   height: 33.33%;
   box-sizing: border-box;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
 }
 .r1-container:hover,
 .r2-container:hover,
 .r3-container:hover {
-  background: rgba(150, 150, 150, 0.5);
+  background: rgba(255, 255, 255, 1.0);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 

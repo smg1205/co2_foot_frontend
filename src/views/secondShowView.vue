@@ -105,12 +105,10 @@ onUnmounted(() => {
     echarts.getInstanceByDom(chartEl)?.dispose();
   });
 });
-
-const backImg = "/src/static/img_1.png";
 </script>
 
 <template>
-  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
+  <div class="container">
     <div class="dashboard">
       <!-- 上层四个图表 -->
       <div class="top-section">

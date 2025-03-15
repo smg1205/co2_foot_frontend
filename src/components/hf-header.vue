@@ -42,8 +42,7 @@ const navLinks = computed(() => extractVisibleRoutes(router.options.routes));
 <style scoped>
 /* 头部导航栏 */
 .nav-header {
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
   padding: 15px 30px; /* 上下留白更大 */
   height: 60px; /* 增加整体高度 */
   display: flex;
@@ -54,7 +53,7 @@ const navLinks = computed(() => extractVisibleRoutes(router.options.routes));
 ul {
   list-style: none;
   display: flex;
-  gap: 20px; /* 按钮间距更大 */
+  gap: 20px;
   padding: 0;
   margin: 0;
 }

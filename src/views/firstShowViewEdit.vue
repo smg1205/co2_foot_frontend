@@ -208,11 +208,10 @@ onMounted(() => {
   initChartR3()
   initChartR4()
 })
-const backImg = "/src/static/img_1.png";
 </script>
 
 <template>
-  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
+  <div class="container">
     <div class="main-content">
       <div class="left-container">
         <div class="l1-container">
@@ -298,6 +297,7 @@ const backImg = "/src/static/img_1.png";
 .container {
   display: flex;
   flex-direction: column;
+  margin-top: 40px;
   gap: 2vh;
   padding: 2vh 2vw;
   height: 96vh;
@@ -316,14 +316,14 @@ const backImg = "/src/static/img_1.png";
   flex-direction: column;
   height: 67vh;
   gap: 1.5vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 8px;
   padding: 1.5vh;
   transition: transform 0.3s, background 0.3s;
 }
 
 .left-container:hover {
-  background: rgb(54, 190, 209);
+  background: rgb(255, 255, 255);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
@@ -332,7 +332,7 @@ const backImg = "/src/static/img_1.png";
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.6);
   width: 55vw;
   height: 70vh;
   float: right;
@@ -343,7 +343,7 @@ const backImg = "/src/static/img_1.png";
 
 
 .right-container:hover {
-  background: #00ab2e;
+  background: rgb(255, 255, 255);
   transform: translateY(-5px);
 }
 
