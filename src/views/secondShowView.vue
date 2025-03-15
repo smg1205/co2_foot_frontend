@@ -140,17 +140,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
 
-body {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 144, 255, 0.8)), url('@/assets/Background.png') no-repeat center center fixed; /* 渐变背景和背景图 */
-  background-size: cover; /* 背景图覆盖整个页面 */
-}
 
 .container {
   width: 100%;
@@ -169,20 +159,20 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  height: 100%; /* 确保组件占满父容器 */
+  height: 100%;
 }
 
 .chart-card {
-  background: rgba(255, 255, 255, 1); /* 设置为白色背景 */
+  background: rgba(255, 255, 255, 1);
   padding: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* 增强阴影 */
-  border-radius: 12px; /* 增加圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   height: 300px;
   position: relative;
-  overflow: hidden; /* 防止内容溢出 */
-  transition: transform 0.3s; /* 添加过渡效果 */
+  overflow: hidden;
+  transition: transform 0.3s;
 }
 
 .chart-card:hover {
@@ -194,7 +184,7 @@ body {
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
-  color: black; /* 将标题颜色改为黑色 */
+  color: black;
 }
 
 .chart-container {
@@ -221,14 +211,14 @@ body {
 
 .current-day {
   font-size: 14px;
-  color: black; /* 将当前日期字体颜色改为黑色 */
+  color: black;
   margin-bottom: 4px;
   text-align: center;
 }
 
 .indicator {
   font-size: 10px;
-  color: #00BFFF; /* 使用亮蓝色 */
+  color: #00BFFF;
   margin-bottom: 2px;
   text-align: center;
 }
