@@ -241,13 +241,11 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeHandler)
   mapChart?.dispose()
 })
-const backImg = "/src/static/img_1.png";
-
 </script>
 
 <template>
   <!-- 新增顶部栏 -->
-  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
+  <div class="container">
     <div class="top-bar">
       <div v-for="n in 5" :key="n" class="indicator">
         指标 {{ n }}
@@ -317,9 +315,7 @@ const backImg = "/src/static/img_1.png";
           <div id="r2Chart" class="chart"></div>
         </div>
         <div class="r3-container">
-          <div>
             <h1>DeepSeek建议</h1>
-          </div>
         </div>
       </div>
     </div>
@@ -340,20 +336,20 @@ const backImg = "/src/static/img_1.png";
 
 .indicator {
   flex: 1;
-  background-color: rgba(4, 2, 2, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #606266;
+  color: #000000;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   transition: transform 0.2s;
 }
 
 .indicator:hover {
   transform: translateY(-2px);
-  background-color: rgb(83, 184, 187);
+  background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(136, 136, 136, 0.12);
 }
 
@@ -398,6 +394,8 @@ const backImg = "/src/static/img_1.png";
 .l3-container {
   width: 98%;
   height: 33.33%;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
   box-sizing: border-box;
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
@@ -405,7 +403,7 @@ const backImg = "/src/static/img_1.png";
 .l1-container:hover,
 .l2-container:hover,
 .l3-container:hover {
-  background: rgba(246, 244, 244, 0.5);
+  background: rgba(255, 255, 255, 1);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
@@ -413,9 +411,11 @@ const backImg = "/src/static/img_1.png";
   text-align: center;
   color: #fff;
   width: 100%;
-  height: 33.33%;
+  height: 30%;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #fff;
+  border-radius: 5px;
   transition: transform 0.3s, background 0.3s;
 }
 /* 右侧每个图表区域：同理占满父容器宽度、高度各占1/3 */
@@ -424,13 +424,15 @@ const backImg = "/src/static/img_1.png";
   width: 100%;
   height: 33.33%;
   box-sizing: border-box;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
 }
 .r1-container:hover,
 .r2-container:hover,
 .r3-container:hover {
-  background: rgba(150, 150, 150, 0.5);
+  background: rgba(255, 255, 255, 1.0);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
