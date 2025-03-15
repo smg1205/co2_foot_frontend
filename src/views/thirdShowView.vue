@@ -241,87 +241,90 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeHandler)
   mapChart?.dispose()
 })
-
+const backImg = "/src/static/img_1.png";
 
 </script>
 
 <template>
   <!-- 新增顶部栏 -->
-  <div class="top-bar">
-    <div v-for="n in 5" :key="n" class="indicator">
-      指标 {{ n }}
-    </div>
-  </div>
-
-  <div class="content-container">
-    <div class="left-container">
-      <div class="l1-container">
-        <div id="l1Chart" class="chart"></div>
-      </div>
-      <div class="l2-container">
-        <div id="l2Chart" class="chart"></div>
-      </div>
-      <div class="l3-container">
-        <div id="l3Chart" class="chart"></div>
+  <div class="container" :style="{backgroundImage: `url(${backImg})`}">
+    <div class="top-bar">
+      <div v-for="n in 5" :key="n" class="indicator">
+        指标 {{ n }}
       </div>
     </div>
 
-    <div class="center-container">
-      <div class="center-top-container">
-        <div id="chinaMap" class="map-chart"></div>
+    <div class="content-container">
+      <div class="left-container">
+        <div class="l1-container">
+          <div id="l1Chart" class="chart"></div>
+        </div>
+        <div class="l2-container">
+          <div id="l2Chart" class="chart"></div>
+        </div>
+        <div class="l3-container">
+          <div id="l3Chart" class="chart"></div>
+        </div>
       </div>
 
-      <div class="center-bottom-container">
-        <div class="scroller">
-          <a href="https://baijiahao.baidu.com/s?id=1720542580856660031" class="link-item">
-            碳循环的基本概念与原理
-          </a>
-          <a href="https://www.sohu.com/a/736656508_121124020" class="link-item">
-            “双碳”科普——基础知识篇
-          </a>
-          <a href="https://www.endress.com.cn/zh/sustainability-solutions" class="link-item">
-            工业领域的可持续发展解决方案
-          </a>
-          <a href="https://sdxw.iqilu.com/share/YS0yMS0xMzIzNjIwOQ%3D%3D.html" class="link-item">
-            碳达峰碳中和知识科普
-          </a>
-          <a href="https://sthjj.wenzhou.gov.cn/art/2022/4/27/art_1317648_58871462.html" class="link-item">
-            碳达峰碳中和知识科普
-          </a>
-          <a href="https://www.bilibili.com/video/BV16C4y127r4/?vd_source=2aba2a89a6ca10511b4f4eebb2808bdd" class="link-item">
-            双碳小知识——碳排放
-          </a>
-          <a href="https://www.chinacaj.net/news/56799.html" class="link-item">
-            碳循环，你要知道的科普小知识
-          </a>
-          <a href="https://rcees.cas.cn/kx/kxpj/kpwz/200911/t20091108_6825855.html" class="link-item">
-            碳循环和CO2排放
-          </a>
-          <a href="https://sisd.org.cn/express/express617.html" class="link-item">
-            双碳科普
-          </a>
-          <a href="https://xn--6oq29spurowlws4a.cn/lore.html" class="link-item">
-            碳汇基础知识
-          </a>
+      <div class="center-container">
+        <div class="center-top-container">
+          <div id="chinaMap" class="map-chart"></div>
+        </div>
+
+        <div class="center-bottom-container">
+          <div class="scroller">
+            <a href="https://baijiahao.baidu.com/s?id=1720542580856660031" class="link-item">
+              碳循环的基本概念与原理
+            </a>
+            <a href="https://www.sohu.com/a/736656508_121124020" class="link-item">
+              “双碳”科普——基础知识篇
+            </a>
+            <a href="https://www.endress.com.cn/zh/sustainability-solutions" class="link-item">
+              工业领域的可持续发展解决方案
+            </a>
+            <a href="https://sdxw.iqilu.com/share/YS0yMS0xMzIzNjIwOQ%3D%3D.html" class="link-item">
+              碳达峰碳中和知识科普
+            </a>
+            <a href="https://sthjj.wenzhou.gov.cn/art/2022/4/27/art_1317648_58871462.html" class="link-item">
+              碳达峰碳中和知识科普
+            </a>
+            <a href="https://www.bilibili.com/video/BV16C4y127r4/?vd_source=2aba2a89a6ca10511b4f4eebb2808bdd" class="link-item">
+              双碳小知识——碳排放
+            </a>
+            <a href="https://www.chinacaj.net/news/56799.html" class="link-item">
+              碳循环，你要知道的科普小知识
+            </a>
+            <a href="https://rcees.cas.cn/kx/kxpj/kpwz/200911/t20091108_6825855.html" class="link-item">
+              碳循环和CO2排放
+            </a>
+            <a href="https://sisd.org.cn/express/express617.html" class="link-item">
+              双碳科普
+            </a>
+            <a href="https://xn--6oq29spurowlws4a.cn/lore.html" class="link-item">
+              碳汇基础知识
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧容器：再放三个图表 -->
+      <div class="right-container">
+        <div class="r1-container">
+          <div id="r1Chart" class="chart"></div>
+        </div>
+        <div class="r2-container">
+          <div id="r2Chart" class="chart"></div>
+        </div>
+        <div class="r3-container">
+          <div>
+            <h1>DeepSeek建议</h1>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- 右侧容器：再放三个图表 -->
-    <div class="right-container">
-      <div class="r1-container">
-        <div id="r1Chart" class="chart"></div>
-      </div>
-      <div class="r2-container">
-        <div id="r2Chart" class="chart"></div>
-      </div>
-      <div class="r3-container">
-        <div>
-          <h1>DeepSeek建议</h1>
-        </div>
-      </div>
-    </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -337,7 +340,7 @@ onUnmounted(() => {
 
 .indicator {
   flex: 1;
-  background: white;
+  background-color: rgba(4, 2, 2, 0.5);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -350,7 +353,8 @@ onUnmounted(() => {
 
 .indicator:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  background-color: rgb(83, 184, 187);
+  box-shadow: 0 4px 8px rgba(136, 136, 136, 0.12);
 }
 
 .content-container {
@@ -401,12 +405,13 @@ onUnmounted(() => {
 .l1-container:hover,
 .l2-container:hover,
 .l3-container:hover {
-  background: rgba(150, 150, 150, 0.5);
+  background: rgba(246, 244, 244, 0.5);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
 .r3-container{
   text-align: center;
+  color: #fff;
   width: 100%;
   height: 33.33%;
   box-sizing: border-box;
