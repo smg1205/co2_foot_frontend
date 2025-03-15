@@ -64,7 +64,7 @@ function generateInitialDates() {
   let startDate = new Date(new Date().getFullYear(), 0, 1) // 今年的1月1日
 
   // 从1月1日开始获取连续7天的日期
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 10; i++) {
     let tempDate = new Date(startDate)
     tempDate.setDate(startDate.getDate() + i)
     xAxisData.push(`${tempDate.getMonth() + 1}/${tempDate.getDate()}`) // 格式化日期为 "月/日"
@@ -80,7 +80,7 @@ function createDynamicChart(el, title, min, max, interval) {
 
   let xAxisData = generateInitialDates()  // 从1月1号开始的七天数据
   // 假设这些是你从后端获取的七天数据
-  let yAxisData = [70, 80, 90, 85, 95, 100, 110]  // 你可以替换为实际数据
+  let yAxisData = [70, 80, 90, 85, 95, 100, 110, 100, 50, 30]  // 你可以替换为实际数据
 
   const option = {
     title: { text: title, left: 'center', textStyle: { fontSize: 14 } },
@@ -91,9 +91,8 @@ function createDynamicChart(el, title, min, max, interval) {
       data: yAxisData,
       type: 'line',
       smooth: true,
-      showSymbol: false,
-      animationDuration: 1000,
-      areaStyle: {}
+      showSymbol: true,
+      animationDuration: 10,
     }]
   }
 
@@ -130,7 +129,7 @@ function initChartL3() {
       'CH4 直接碳排放',
       50,   // 最小值 50
       100,  // 最大值 100
-      2000  // 每 2 秒更新一次
+      1000  // 每 2 秒更新一次
   )
 }
 // 右侧图表1：物耗（絮凝剂）碳排放量（曲线图）喵~
@@ -183,7 +182,7 @@ function initChartR3() {
       '热耗碳排放强度',
       70,   // 最小值 70
       150,  // 最大值 150
-      2000  // 每 4 秒更新一次
+      1000  // 每 4 秒更新一次
   )
 }
 
@@ -193,7 +192,7 @@ function initChartR4() {
       '电耗碳排放强度',
       60,   // 最小值 60
       120,  // 最大值 120
-      2000  // 每 3 秒更新一次
+      1000  // 每 3 秒更新一次
   )
 }
 

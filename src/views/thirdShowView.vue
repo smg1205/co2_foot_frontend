@@ -92,7 +92,7 @@ function initChartR1() {
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '右侧图表1',
+      text: '去除单位化学需氧量的耗电量',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
@@ -119,7 +119,7 @@ function initChartR2() {
   const myChart = echarts.init(el)
   const option = {
     title: {
-      text: '右侧图表2',
+      text: '处理单位污水产生绝干污泥量',
       left: 'center',
       textStyle: { fontSize: 14 }
     },
@@ -140,34 +140,6 @@ function initChartR2() {
   myChart.setOption(option)
 }
 
-function initChartR3() {
-  const el = document.getElementById('r3Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
-  const option = {
-    title: {
-      text: '右侧图表3',
-      left: 'center',
-      textStyle: { fontSize: 14 }
-    },
-    tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [60, 65, 70, 75, 80, 85, 90],
-        type: 'line',
-        smooth: true,
-        areaStyle: {}
-      }
-    ]
-  }
-  myChart.setOption(option)
-}
-
 // 页面加载后初始化6个图表
 onMounted(() => {
   initChartL1()
@@ -175,7 +147,6 @@ onMounted(() => {
   initChartL3()
   initChartR1()
   initChartR2()
-  initChartR3()
 })
 
 // 初始化中国地图
@@ -345,7 +316,9 @@ onUnmounted(() => {
         <div id="r2Chart" class="chart"></div>
       </div>
       <div class="r3-container">
-        <div id="r3Chart" class="chart"></div>
+        <div>
+          <h1>DeepSeek建议</h1>
+        </div>
       </div>
     </div>
   </div>
@@ -358,7 +331,7 @@ onUnmounted(() => {
   width: 90vw;
   display: flex;
   gap: 15px;
-  padding: 15px 20px;
+  padding: 30px 20px 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
@@ -423,16 +396,37 @@ onUnmounted(() => {
   height: 33.33%;
   box-sizing: border-box;
   border-bottom: 1px solid #fff;
+  transition: transform 0.3s, background 0.3s;
+}
+.l1-container:hover,
+.l2-container:hover,
+.l3-container:hover {
+  background: rgba(150, 150, 150, 0.5);
+  transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
-/* 右侧每个图表区域：同理占满父容器宽度、高度各占1/3 */
-.r1-container,
-.r2-container,
-.r3-container {
+.r3-container{
+  text-align: center;
   width: 100%;
   height: 33.33%;
   box-sizing: border-box;
   border-bottom: 1px solid #fff;
+  transition: transform 0.3s, background 0.3s;
+}
+/* 右侧每个图表区域：同理占满父容器宽度、高度各占1/3 */
+.r1-container,
+.r2-container {
+  width: 100%;
+  height: 33.33%;
+  box-sizing: border-box;
+  border-bottom: 1px solid #fff;
+  transition: transform 0.3s, background 0.3s;
+}
+.r1-container:hover,
+.r2-container:hover,
+.r3-container:hover {
+  background: rgba(150, 150, 150, 0.5);
+  transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
 /* 图表本身铺满父容器 */

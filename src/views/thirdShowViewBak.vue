@@ -139,35 +139,6 @@ function initChartR2() {
   }
   myChart.setOption(option)
 }
-
-function initChartR3() {
-  const el = document.getElementById('r3Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
-  const option = {
-    title: {
-      text: '右侧图表3',
-      left: 'center',
-      textStyle: { fontSize: 14 }
-    },
-    tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [60, 65, 70, 75, 80, 85, 90],
-        type: 'line',
-        smooth: true,
-        areaStyle: {}
-      }
-    ]
-  }
-  myChart.setOption(option)
-}
-
 // 页面加载后初始化6个图表
 onMounted(() => {
   initChartL1()
@@ -175,7 +146,6 @@ onMounted(() => {
   initChartL3()
   initChartR1()
   initChartR2()
-  initChartR3()
 })
 </script>
 
@@ -194,7 +164,6 @@ onMounted(() => {
     </div>
 
     <div class="center-container">
-      <!-- 这里可以放其他组件或图表等喵~ -->
     </div>
 
     <!-- 右侧容器：再放三个图表 -->
@@ -206,7 +175,10 @@ onMounted(() => {
         <div id="r2Chart" class="chart"></div>
       </div>
       <div class="r3-container">
-        <div id="r3Chart" class="chart"></div>
+        <div>
+            <h1>DeepSeek建议</h1>
+
+        </div>
       </div>
     </div>
   </div>
@@ -217,8 +189,8 @@ onMounted(() => {
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  margin: 30px;
+  padding-top: 30px;
 }
 
 .left-container {
