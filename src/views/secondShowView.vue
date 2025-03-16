@@ -8,15 +8,15 @@ const currentDay = ref(Array(4).fill('1/1'));
 
 const chartConfigs = [
   { indicators: ['BOD', 'COD'], colors: [' #FFFF00',' #00FFFF'], lineStyles: ['solid', 'dashed'] },
-  { indicators: ['TN'], colors: ['#FF007F'], lineStyles: ['solid'] },
-  { indicators: ['N20', 'CH4', 'CO2'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮粉色、亮青色
+  { indicators: ['TN'], colors: ['#7FFF00'], lineStyles: ['solid'] },
+  { indicators: ['N₂0', 'CH₄', 'CO₂'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮粉色、亮青色
   { indicators: ['电耗', '热耗', '物耗'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] } // 亮黄色、亮粉色、亮青色
 ];
 
 const titles = [
   '好氧污染物削减量随时间的变化趋势',
   '总氮削减量随时间的变化趋势',
-  'N20、CH4、CO2随污水处理量的变化趋势',
+  'N₂0、CH₄、CO₂随污水处理量的变化趋势',
   '电耗、热耗、物耗随污水处理量的变化趋势',
 ];
 
