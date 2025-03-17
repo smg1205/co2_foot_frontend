@@ -7,13 +7,12 @@ export const routes = [
     },
     {
         path: "/main",
-        name: "展示页",
         redirect: "/main/tran",
         component: () => import("@/views/mainView.vue"),
         children: [
             {
                 path: "tran",
-                name: "过渡页",
+                name: "向导页",
                 meta: {
                     isShow: true,
                     backImg: ""
@@ -22,7 +21,7 @@ export const routes = [
             },
             {
                 path: "show", // 相对路径
-                name: "碳排放强度展示",
+                name: "低碳运行评价",
                 meta: {
                     isShow: true,
                     backImg: ""
@@ -31,7 +30,7 @@ export const routes = [
             },
             {
                 path: "info", // 相对路径
-                name: "趋势图",
+                name: "碳绿轨迹",
                 meta: {
                     isShow: true,
                     backImg: ""
@@ -40,7 +39,7 @@ export const routes = [
             },
             {
                 path: "stan", // 相对路径
-                name: "指标及建议",
+                name: "清洁生产水平分析",
                 meta: {
                     isShow: true,
                     backImg: ""
