@@ -351,7 +351,7 @@ onUnmounted(() => {
 
         <div class="center-bottom-container">
           <div class="scroller">
-            <a href="https://baijiahao.baidu.com/s?id=1720542580856660031" class="link-item">
+            <a target="_blank" href="https://baijiahao.baidu.com/s?id=1720542580856660031" class="link-item">
               碳循环的基本概念与原理
             </a>
             <a href="https://www.sohu.com/a/736656508_121124020" class="link-item">
