@@ -1,9 +1,7 @@
 <template>
   <div class="custom-background">
-    <!-- 页面标题 -->
     <h1 class="page-title">污水处理厂智慧碳管理系统</h1>
-
-    <!-- 软件简介 -->
+    
     <div class="software-intro">
       <div class="intro-content">
         <p>
@@ -33,12 +31,12 @@
       </div>
     </div>
 
-    <!-- 下载模板按钮 -->
+
     <button class="circle-button download-button" @click="downloadTemplate">
       模板下载
     </button>
 
-    <!-- 上传 Excel 按钮 -->
+
     <label class="circle-button upload-button">
       数据上传
       <input
@@ -52,17 +50,17 @@
 </template>
 
 <script setup>
-// 下载模板按钮点击事件
+
 const downloadTemplate = () => {
   alert('模板下载');
 };
 
-// 上传 Excel 文件处理
+
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     alert(`已选择文件: ${file.name}`);
-    // 这里可以添加文件上传的逻辑
+
   }
 };
 </script>
@@ -81,14 +79,14 @@ const handleFileUpload = (event) => {
   z-index: 0;
 }
 
-/* 页面标题样式 */
+
 .page-title {
   position: absolute;
-  top: 4.5%; /* 距离顶部10% */
-  left: 55%; /* 水平居中 */
-  transform: translateX(-50%); /* 水平居中 */
+  top: 4.5%;
+  left: 55%;
+  transform: translateX(-50%);
   color: white;
-  font-size: 54px; /* 增大字号 */
+  font-size: 54px;
   font-family: 'Exo 6', sans-serif;
 
   font-weight: bold;
@@ -108,7 +106,6 @@ const handleFileUpload = (event) => {
 }
 
 
-/* 软件简介区域 */
 .software-intro {
   position: absolute;
   top:53%;
@@ -140,7 +137,7 @@ const handleFileUpload = (event) => {
   }
 }
 
-/* 圆圈按钮的基础样式 */
+
 .circle-button {
   position: absolute;
   width: 400px;
@@ -163,20 +160,20 @@ const handleFileUpload = (event) => {
   z-index: 1;
 }
 
-/* 鼠标悬停效果 */
+
 .circle-button:hover {
   background-color: rgba(30, 144, 255, 0.4);
   text-shadow: 0 0 15px rgba(30, 144, 255, 1), 0 0 30px rgba(30, 144, 255, 0.8);
 }
 
-/* 下载模板按钮的位置 */
+
 .download-button {
   top: 50%;
   right: 10%;
   transform: translateY(-53%);
 }
 
-/* 上传 Excel 按钮的位置 */
+
 .upload-button {
   top: 50%;
   right: 36.5%;
