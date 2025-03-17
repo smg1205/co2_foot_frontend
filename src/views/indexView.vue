@@ -1,7 +1,6 @@
 <script setup>
 import {goToTran} from "@/libs/RouterMove.js";
-
-const back_img = "src/static/img_12.jpg";
+const back_img = "src/static/img_13.jpg";
 </script>
 
 <template>
@@ -16,7 +15,6 @@ const back_img = "src/static/img_12.jpg";
 <style scoped>
 .backend-img {
   z-index: -1;
-  background-color: #337ecc;
   height: 120vh;
   top: 0;
   left: 0;
