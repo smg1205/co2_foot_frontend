@@ -9,7 +9,7 @@ const currentDay = ref(Array(4).fill('1/1'));
 const chartConfigs = [
   { indicators: ['BOD', 'COD'], colors: [' #FFFF00',' #00FFFF'], lineStyles: ['solid', 'dashed'] },
   { indicators: ['TN'], colors: ['#00FFBF'], lineStyles: ['solid'] },
-  { indicators: ['N₂0', 'CH₄', 'CO₂'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮粉色、亮青色
+  { indicators: ['N₂O', 'CH₄', 'CO₂'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] }, // 亮黄色、亮粉色、亮青色
   { indicators: ['电耗', '热耗', '物耗'], colors: ['#FFD700', '#FF69B4', '#00CED1'], lineStyles: ['solid', 'dashed', 'dotted'] } // 亮黄色、亮粉色、亮青色
 ];
 
