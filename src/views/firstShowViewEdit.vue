@@ -344,7 +344,7 @@ watch(
         </span>
         <hr>
         <span class="flex-span">
-          碳排放强度核算 <span class="count"> 0.50 </span>
+          碳排放强度核算 <span class="count"> 0.50 kgCO₂/m³ </span>
           <el-tooltip effect="dark" content="上一名暂无，下一名是xxx" placement="right">
             <el-button>数据库排名第一名</el-button>
           </el-tooltip>
