@@ -17,7 +17,7 @@ function initChartL1() {
   const myChart = echarts.init(el);
 
   // 原始数据
-  const rawData = [120, 200, 150, 80, 70, 110, 130];
+  const rawData = [120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110, 130];
 
   // 评价标准函数
   const getTotalGrade = (data) => {
@@ -120,7 +120,7 @@ function initChartL2() {
   const myChart = echarts.init(el);
 
   // 原始数据
-  const rawData = [20, 30, 35, 50, 40, 60, 55];
+  const rawData = [20, 30, 35, 50, 40, 60, 55, 20, 30, 35, 50, 40, 60, 55];
 
   // 评价标准函数（假设：A≤35kg，35<B≤50kg，C>50kg）
   const getTotalGrade = (data) => {
@@ -235,7 +235,7 @@ function initChartL3() {
   const myChart = echarts.init(el)
 
   // 原始数据
-  const chartData = [90, 92, 88, 95, 93, 91, 94];
+  const chartData = [90, 92, 88, 95, 93, 91, 94,90, 92, 88, 95, 93, 91, 94];
 
   // 计算平均值
   const average = chartData.reduce((sum, val) => sum + val, 0) / chartData.length;
@@ -320,7 +320,7 @@ function initChartR1() {
   const myChart = echarts.init(el);
 
   // 原始数据
-  const rawData = [50, 60, 80, 70, 110, 90, 120];
+  const rawData = [50, 60, 80, 70, 110, 90, 120, 50, 60, 80, 70, 110, 90, 120];
 
   // 评价标准函数
   const getTotalGrade = (data) => {
@@ -415,7 +415,7 @@ function initChartR2() {
   const myChart = echarts.init(el);
 
   // 原始数据
-  const rawData = [100, 90, 120, 80, 70, 130, 140];
+  const rawData = [100, 90, 120, 80, 70, 130, 140,100, 90, 120, 80, 70, 130, 140];
 
   // 评价标准函数
   const getTotalGrade = (data) => {
