@@ -60,7 +60,6 @@ const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     alert(`已选择文件: ${file.name}`);
-
   }
 };
 </script>

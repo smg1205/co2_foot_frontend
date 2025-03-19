@@ -1,5 +1,6 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'  // 导入 onMounted 喵~
+import gsap from 'gsap'
+import {onMounted, reactive, ref, watch} from 'vue'  // 导入 onMounted 喵~
 import * as echarts from 'echarts'  // 导入 ECharts 喵~
 import { ElMessage, ElMessageBox } from "element-plus"  // 导入 Element Plus 组件喵~
 import { useCh4Store } from "@/libs/CH4FirstStore.js"
@@ -8,7 +9,8 @@ import {useEleStore} from "@/libs/EleFirstStore.js";
 import {useNO2Store} from "@/libs/NO2FirstStore.js";
 import {useCO2Store} from "@/libs/CO2FirstStore.js";
 import {useObjectStore} from "@/libs/ObjectCarbonStore.js";
-import {useFlocculantStore} from "@/libs/FlocculantStore.js";  // 导入 Pinia store 喵~
+import {useFlocculantStore} from "@/libs/FlocculantStore.js";
+import {fetchAIData} from "@/libs/DeepSeekMsg.js";  // 导入 Pinia store 喵~
 
 const chineseMonths = [
   '1月', '2月', '3月', '4月', '5月', '6月',
@@ -61,7 +63,15 @@ function createStaticChart(el, title, data, categories, isBar = false) {
         type: isBar ? 'bar' : 'line',
         smooth: !isBar,
         ...(isBar && { barWidth: 10, itemStyle: { color: '#FFA500' } }),
-        ...(!isBar && { lineStyle: { color: '#FFA500', width: 2 }, itemStyle: { color: '#FFA500' } })
+        ...(!isBar && { lineStyle: { color: '#FFA500', width: 2 }, itemStyle: { color: '#FFA500' } }),
+        lineStyle: { color: '#5fd24a', width: 2 },
+        itemStyle: { color: '#5fd24a' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgb(95,210,74)' },
+            { offset: 1, color: 'rgba(24,144,255,0.02)' }
+          ])
+        }
       }
     ]
   }
@@ -132,8 +142,14 @@ function createDynamicChart(el, title, min, max, interval,initialData = null) {
         smooth: true,
         showSymbol: true,
         animationDuration: 10,
-        lineStyle: { color: '#FFA500', width: 2 },
-        itemStyle: { color: '#FFA500' }
+        lineStyle: { color: '#5fd24a', width: 2 },
+        itemStyle: { color: '#5fd24a' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgb(95,210,74)' },
+            { offset: 1, color: 'rgba(24,144,255,0.02)' }
+          ])
+        }
       }
     ]
   };
@@ -158,8 +174,14 @@ function createDynamicChart(el, title, min, max, interval,initialData = null) {
       xAxis: { data: xAxisData },
       series: [{
         data: yAxisData,
-        lineStyle: { color: '#FFA500', width: 2 },
-        itemStyle: { color: '#FFA500' }
+        lineStyle: { color: '#5fd24a', width: 2 },
+        itemStyle: { color: '#5fd24a' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgb(95,210,74)' },
+            { offset: 1, color: 'rgba(24,144,255,0.02)' }
+          ])
+        }
       }],
       title: [
         { text: title },
@@ -173,7 +195,7 @@ function createDynamicChart(el, title, min, max, interval,initialData = null) {
 function initChartL1() {
   const el = document.getElementById('l1Chart')
   if (!el) return
-  createStaticChart(el, 'NO₂直接碳排放', NO2Store.NO2Info, chineseMonths)
+  createStaticChart(el, 'N₂O直接碳排放', NO2Store.NO2Info, chineseMonths)
 }
 
 function initChartL2() {
@@ -205,13 +227,13 @@ function initChartR2() {
 function initChartR3() {
   const el = document.getElementById('r3Chart')
   if (!el) return
-  createDynamicChart(el, '热耗碳排放强度', 0, 50, 1000, heatStore.standardCoalEmissionFactors)
+  createDynamicChart(el, '热耗碳排放强度', 0, 5, 1000, heatStore.standardCoalEmissionFactors)
 }
 
 function initChartR4() {
   const el = document.getElementById('r4Chart')
   if (!el) return
-  createDynamicChart(el, '电耗碳排放强度', 0, 60, 1000, eleStore.electricityCarbonEmissionFactors)
+  createDynamicChart(el, '电耗碳排放强度', 0, 1, 1000, eleStore.electricityCarbonEmissionFactors)
 }
 
 const ch4Store = useCh4Store()  // 获取 Pinia store 实例喵~
@@ -243,17 +265,33 @@ onMounted(async () => {
   initChartR2()
   initChartR3()
   initChartR4()
-  setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % 12;
-  }, 2000); // 每 3 秒切换喵~
+
 })
 
-const open = () => {
-  ElMessageBox.alert('This is a message', 'DeepSeek建议', { confirmButtonText: '好的' })
+const open = async () => {
+  ElMessageBox.alert(`${await fetchAIData()}`, 'DeepSeek建议', {confirmButtonText: '好的'});
 }
+const mouths_number = ref(0);
+const months_numbers = O2CStore.O2CInfo;
+const idx = ref(0)
 
-const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-const currentIndex = ref(0)
+
+
+const tweened = reactive({
+  number: 11451
+})
+
+setInterval(() => {
+  idx.value = (idx.value + 1) % 12 // Move to the next number in the array
+  mouths_number.value = months_numbers[idx.value] // Use .value to access and modify the ref
+}, 3000)
+
+watch(
+    mouths_number,
+    (n) => {
+      gsap.to(tweened, { duration: 0.5, number: Number(n) || 0 })
+    }
+)
 </script>
 
 <template>
@@ -289,36 +327,31 @@ const currentIndex = ref(0)
     </div>
     <!-- 底部 footer 容器喵~ -->
     <div class="footer-container">
-<!--      <div class="calendar">-->
-<!--        <h3>日历</h3>-->
-<!--        <h4>当前碳排放强度最大值：物耗（碳源）</h4>-->
-<!--        <h3>值为</h3>-->
-<!--      </div>-->
       <transition name="fade" mode="out-in">
         <div class="calendar-box">
-          <h4>当前月份：{{ months[currentIndex] }}</h4>
+          <h5>&nbsp</h5>
           <h4>当前月份 物耗（碳源）碳排放强度最大</h4>
-          <h4>碳排放强度：{{ Math.floor(O2CStore.O2CInfo[currentIndex])  }} kgCO₂/m³</h4>
+          <h4>碳排放强度：{{ Math.floor( tweened.number.toFixed(0))  }} kgCO₂/m³</h4>
         </div>
       </transition>
       <div style="color: #fff;">
         <h3>低碳运行评价</h3>
         <span class="flex-span">
-          低碳运行评价分数 <span class="count">100</span>
+          低碳运行评价分数 <span class="count">85.82(一级)</span>
           <el-tooltip effect="dark" content="上一名暂无，下一名是xxx" placement="right">
             <el-button>数据库排名第一名</el-button>
           </el-tooltip>
         </span>
         <hr>
         <span class="flex-span">
-          碳排放强度核算 <span class="count">100</span>
+          碳排放强度核算 <span class="count"> 0.50 </span>
           <el-tooltip effect="dark" content="上一名暂无，下一名是xxx" placement="right">
             <el-button>数据库排名第一名</el-button>
           </el-tooltip>
         </span>
       </div>
       <div class="ds-container" style="color: #fff; cursor: pointer;">
-        <h1 class="--ds-span" @click="open">DeepSeek建议</h1>
+        <h2 class="--ds-span" @click="open">DeepSeek建议</h2>
       </div>
     </div>
   </div>

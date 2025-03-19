@@ -1,145 +1,507 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import {onMounted, onUnmounted, ref} from 'vue'
 import * as echarts from 'echarts'
+import {ElMessageBox} from "element-plus";
+import {fetchAIData} from "@/libs/DeepSeekMsg.js";
+
+const chineseMonths = [
+  '1月', '2月', '3月', '4月', '5月', '6月',
+  '7月', '8月', '9月', '10月', '11月', '12月'
+]  // 定义中文月份喵~
 
 // 左侧三个图表
+//左一
 function initChartL1() {
-  const el = document.getElementById('l1Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
+  const el = document.getElementById('l1Chart');
+  if (!el) return;
+  const myChart = echarts.init(el);
+
+  // 原始数据
+  const rawData = [120, 200, 150, 80, 70, 110, 130];
+
+  // 评价标准函数
+  const getTotalGrade = (data) => {
+    const maxValue = Math.max(...data);
+    const avgValue = data.reduce((a, b) => a + b, 0) / data.length;
+
+    // 双条件评价：当出现C级数据或平均超过阈值时
+    if (maxValue > 150 || avgValue > 150) {
+      return { grade: 'C', color: '#F5222D', desc: '能耗过高' };
+    }
+    if (maxValue > 80 || avgValue > 80) {
+      return { grade: 'B', color: '#FAAD14', desc: '能耗正常' };
+    }
+    return { grade: 'A', color: '#52C41A', desc: '能耗优秀' };
+  };
+
+  // 获取总评结果
+  const totalGrade = getTotalGrade(rawData);
+
   const option = {
-    title: {
+    title: [{
       text: '处理单位污水的耗电量',
       left: 'center',
-      textStyle: { fontSize: 14 }
+      textStyle: {
+        fontSize: 14,
+        lineHeight: 24,
+        color: '#ffffff'
+      },
+      top: '5%'
     },
+      {
+        text: `总评等级：${totalGrade.grade}（${totalGrade.desc}）`,
+        left: 'center',
+        top: '15%',
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: totalGrade.color
+        }
+      }],
     tooltip: { trigger: 'axis' },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: 'line',
-        smooth: true
+      data: chineseMonths,
+      // 新增x轴颜色设置
+      axisLabel: {
+        color: '#fff' // x轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // x轴线颜色
+        }
       }
-    ]
-  }
-  myChart.setOption(option)
-}
+    },
+    yAxis: { type: 'value',// 新增y轴颜色设置
+      axisLabel: {
+        color: '#fff' // y轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // y轴线颜色
+        }
+      } },
+    series: [{
+      data: rawData,
+      type: 'line',
+      smooth: true,
+      itemStyle: {
+        color: '#5fd24a'
+      },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgb(95,210,74)' },
+          { offset: 1, color: 'rgba(24,144,255,0.02)' }
+        ])
+      }
+    }],
+    // 添加总评说明
+    graphic: {
+      elements: [{
+        type: 'text',
+        left: 'center',
+        top: '25%',
+        style: {
+          text: `评价标准：\nA级（≤80）: 优秀\nB级（81-150）: 正常\nC级（>150）: 过高`,
+          fontSize: 12,
+          fill: '#cad0d5',
+          lineHeight: 20
+        }
+      }]
+    }
+  };
 
+  myChart.setOption(option);
+}
+//右二
 function initChartL2() {
-  const el = document.getElementById('l2Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
+  const el = document.getElementById('l2Chart');
+  if (!el) return;
+  const myChart = echarts.init(el);
+
+  // 原始数据
+  const rawData = [20, 30, 35, 50, 40, 60, 55];
+
+  // 评价标准函数（假设：A≤35kg，35<B≤50kg，C>50kg）
+  const getTotalGrade = (data) => {
+    const maxValue = Math.max(...data);
+    const avgValue = data.reduce((a, b) => a + b, 0) / data.length;
+
+    // 双条件评价：当出现C级数据或平均超过阈值时
+    if (maxValue > 50 || avgValue > 45) {
+      return { grade: 'C', color: '#F5222D', desc: '污泥量过高' };
+    }
+    if (maxValue > 35 || avgValue > 30) {
+      return { grade: 'B', color: '#FAAD14', desc: '污泥量正常' };
+    }
+    return { grade: 'A', color: '#52C41A', desc: '污泥量优秀' };
+  };
+
+  // 获取总评结果
+  const totalGrade = getTotalGrade(rawData);
+
   const option = {
-    title: {
+    title: [{
       text: '去除单位化学需氧量产生绝干污泥量',
       left: 'center',
-      textStyle: { fontSize: 14 }
+      textStyle: {
+        fontSize: 14,
+        lineHeight: 24,
+        color: '#ffffff'
+      },
+      top: '5%'
     },
-    tooltip: { trigger: 'axis' },
+      {
+        text: `总评等级：${totalGrade.grade}（${totalGrade.desc}）`,
+        left: 'center',
+        top: '15%',
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: totalGrade.color
+        }
+      }],
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params) => {
+        const data = params[0];
+        return `${data.name}<br/>污泥量: ${data.value}kg`;
+      }
+    },
     xAxis: {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [20, 30, 35, 50, 40, 60, 55],
-        type: 'line',
-        smooth: true
+      data: chineseMonths,
+      axisLabel: {
+        color: '#fff' // x轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // x轴线颜色
+        }
       }
-    ]
-  }
-  myChart.setOption(option)
-}
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kg/t',
+      // 新增y轴颜色设置
+      axisLabel: {
+        color: '#fff' // y轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // y轴线颜色
+        }
+      }
+    },
+    series: [{
+      data: rawData,
+      type: 'line',
+      smooth: true,
+      itemStyle: {
+        color: '#5fd24a'
+      },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgb(95,210,74)' },
+          { offset: 1, color: 'rgba(24,144,255,0.02)' }
+        ])
+      }
+    }],
+    // 添加评价标准说明
+    graphic: {
+      elements: [{
+        type: 'text',
+        left: 'center',
+        top: '25%',
+        style: {
+          text: `评价标准：
+A级（≤35kg）: 优秀
+B级（36-50kg）: 正常
+C级（>50kg）: 过高`,
+          fontSize: 12,
+          fill: '#ffffff',
+          lineHeight: 20
+        }
+      }]
+    }
+  };
 
+  myChart.setOption(option);
+}
+//左三
 function initChartL3() {
   const el = document.getElementById('l3Chart')
   if (!el) return
   const myChart = echarts.init(el)
+
+  // 原始数据
+  const chartData = [90, 92, 88, 95, 93, 91, 94];
+
+  // 计算平均值
+  const average = chartData.reduce((sum, val) => sum + val, 0) / chartData.length;
+
+  // 确定评价等级
+  let grade = 'C';
+  if (average >= 90) grade = 'A';
+  else if (average >= 80) grade = 'B';
+
   const option = {
-    title: {
-      text: '化学需氧量去除率',
-      left: 'center',
-      textStyle: { fontSize: 14 }
-    },
+    title: [
+      {
+        text: '化学需氧量去除率',
+        left: 'center',
+        textStyle: { fontSize: 14 ,color: '#ffffff'},
+        top: 10,
+        color: '#ffffff'
+      },
+      {
+        text: `评价等级：${grade}`,
+        left: 'center',
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: grade === 'A' ? '#2E8B57' : grade === 'B' ? '#FFA500' : '#FF4500'
+        },
+        top: 35
+      }
+    ],
     tooltip: { trigger: 'axis' },
     xAxis: {
       type: 'category',
-      data: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+      data: chineseMonths,
+      axisLabel: {
+        color: '#fff' // x轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // x轴线颜色
+        }
+      }
     },
-    yAxis: { type: 'value' },
+    yAxis: {
+      type: 'value',
+      max: 100,
+      axisLabel: {
+        color: '#fff' // y轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // y轴线颜色
+        }
+      }
+    },
     series: [
       {
-        data: [90, 92, 88, 95, 93, 91, 94],
+        data: chartData,
         type: 'line',
         smooth: true,
-        areaStyle: {}
+        areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgb(95,210,74)' },
+              { offset: 1, color: 'rgba(24,144,255,0.02)' }
+            ])
+          },
+        itemStyle: {
+          color: '#5fd24a'
+        }
+
       }
+
     ]
   }
   myChart.setOption(option)
 }
 
 // 右侧三个图表
+//左二
 function initChartR1() {
-  const el = document.getElementById('r1Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
+  const el = document.getElementById('r2Chart');
+  if (!el) return;
+  const myChart = echarts.init(el);
+
+  // 原始数据
+  const rawData = [50, 60, 80, 70, 110, 90, 120];
+
+  // 评价标准函数
+  const getTotalGrade = (data) => {
+    const maxValue = Math.max(...data);
+    const avgValue = data.reduce((a, b) => a + b) / data.length;
+
+    // R1标准：A(≤90) B(91-110) C(>110)
+    if (maxValue > 110 || avgValue > 110) {
+      return { grade: 'C', color: '#F5222D', desc: '能耗过高' };
+    }
+    if (maxValue > 90 || avgValue > 90) {
+      return { grade: 'B', color: '#FAAD14', desc: '能耗正常' };
+    }
+    return { grade: 'A', color: '#52C41A', desc: '能耗优秀' };
+  };
+
+  // 获取总评结果
+  const totalGrade = getTotalGrade(rawData);
+
   const option = {
-    title: {
+    title: [{
       text: '去除单位化学需氧量的耗电量',
       left: 'center',
-      textStyle: { fontSize: 14 }
-    },
+      textStyle: { fontSize: 14,color: '#ffffff' },
+      top: '5%'
+
+    },{
+      text: `总评等级：${totalGrade.grade}（${totalGrade.desc}）`,
+      left: 'center',
+      top: '15%',
+      textStyle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: totalGrade.color
+      }
+    }],
     tooltip: { trigger: 'axis' },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [50, 60, 80, 70, 110, 90, 120],
-        type: 'line',
-        smooth: true
+      data: chineseMonths,
+      axisLabel: {
+        color: '#fff' // x轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // x轴线颜色
+        }
       }
-    ]
-  }
-  myChart.setOption(option)
+    },
+    yAxis: { type: 'value' ,
+      // 新增y轴颜色设置
+      axisLabel: {
+        color: '#fff' // y轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // y轴线颜色
+        }
+      } },
+    series: [{
+      data: rawData,
+      type: 'line',
+      smooth: true,
+      itemStyle: { color: '#5fd24a' },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgb(95,210,74)' },
+          { offset: 1, color: 'rgba(24,144,255,0.02)' }
+        ])
+      }
+    }],
+    graphic: {
+      elements: [{
+        type: 'text',
+        left: 'center',
+        top: '25%',
+        style: {
+          text: `评价标准：\nA级（≤90）: 优秀\nB级（91-110）: 正常\nC级（>110）: 过高`,
+          fontSize: 12,
+          fill: '#ffffff',
+          lineHeight: 20
+        }
+      }]
+    }
+  };
+  myChart.setOption(option);
 }
-
+//右一
 function initChartR2() {
-  const el = document.getElementById('r2Chart')
-  if (!el) return
-  const myChart = echarts.init(el)
+  const el = document.getElementById('r1Chart');
+  if (!el) return;
+  const myChart = echarts.init(el);
+
+  // 原始数据
+  const rawData = [100, 90, 120, 80, 70, 130, 140];
+
+  // 评价标准函数
+  const getTotalGrade = (data) => {
+    const maxValue = Math.max(...data);
+    const avgValue = data.reduce((a, b) => a + b) / data.length;
+
+    // R2标准：A(≤100) B(101-120) C(>120)
+    if (maxValue > 120 || avgValue > 120) {
+      return { grade: 'C', color: '#F5222D', desc: '污泥量过高' };
+    }
+    if (maxValue > 100 || avgValue > 100) {
+      return { grade: 'B', color: '#FAAD14', desc: '污泥量正常' };
+    }
+    return { grade: 'A', color: '#52C41A', desc: '污泥量优秀' };
+  };
+
+  // 获取总评结果
+  const totalGrade = getTotalGrade(rawData);
+
   const option = {
-    title: {
+    title: [{
       text: '处理单位污水产生绝干污泥量',
       left: 'center',
-      textStyle: { fontSize: 14 }
-    },
+      textStyle: { fontSize: 14 ,color: '#ffffff'},
+      top: '5%'
+    },{
+      text: `总评等级：${totalGrade.grade}（${totalGrade.desc}）`,
+      left: 'center',
+      top: '15%',
+      textStyle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: totalGrade.color
+      }
+    }],
     tooltip: { trigger: 'axis' },
     xAxis: {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-    },
-    yAxis: { type: 'value' },
-    series: [
-      {
-        data: [100, 90, 120, 80, 70, 130, 140],
-        type: 'line',
-        smooth: true
+      data: chineseMonths,
+      axisLabel: {
+        color: '#fff'
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff'
+        }
       }
-    ]
-  }
-  myChart.setOption(option)
+    },
+    yAxis: { type: 'value' ,
+      // 新增y轴颜色设置
+      axisLabel: {
+        color: '#fff' // y轴文字颜色
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff' // y轴线颜色
+        }
+      } },
+    series: [{
+      data: rawData,
+      type: 'line',
+      smooth: true,
+      itemStyle: { color: '#5fd24a' },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgb(95,210,74)' },
+          { offset: 1, color: 'rgba(24,144,255,0.02)' }
+        ])
+      }
+    }],
+    graphic: {
+      elements: [{
+        type: 'text',
+        left: 'center',
+        top: '25%',
+        style: {
+          text: `评价标准：\nA级（≤100）: 优秀\nB级（101-120）: 正常\nC级（>120）: 过高`,
+          fontSize: 12,
+          fill: '#ffffff',
+          lineHeight: 20
+        }
+      }]
+    }
+  };
+  myChart.setOption(option);
 }
-
 // 页面加载后初始化6个图表
 onMounted(() => {
   initChartL1()
@@ -148,26 +510,30 @@ onMounted(() => {
   initChartR1()
   initChartR2()
 })
+
 // 初始化中国地图
 let mapChart = null
 let pointIndex = 0; // 当前显示的点索引
 const allPoints = [ // 所有点的数据
-  [114.52, 38.05, 120, '石家庄'],
-  [116.46, 39.92, 100, '北京'],
-  [121.48, 31.22, 90, '上海'],
-  [113.23, 23.16, 80, '广州'],
-  [117.20, 39.08, 95, '天津'],
-  [106.55, 29.57, 85, '重庆'],
-  [126.63, 45.75, 75, '哈尔滨'],
-  [125.32, 43.90, 70, '长春'],
-  [123.43, 41.80, 65, '沈阳'],
-  [111.65, 40.82, 60, '呼和浩特'],
-  [112.55, 37.87, 55, '太原'],
-  [113.62, 34.75, 50, '郑州'],
-  [108.93, 34.27, 45, '西安'],
-  [103.82, 36.06, 40, '兰州'],
-  [101.77, 36.62, 35, '西宁']
-];
+  [114.52, 38.05, 120, ],
+  [116.46, 39.92, 100, ],
+  [121.48, 31.22, 90, ],
+  [117.20, 39.08, 95, ],
+  [106.55, 29.57, 85, ],
+  [126.63, 45.75, 75, ],
+  [125.32, 43.90, 70, ],
+  [123.43, 41.80, 65, ],
+  [111.65, 40.82, 60, ],
+  [112.55, 37.87, 55, ],
+  [113.62, 34.75, 50, ],
+  [108.93, 34.27, 45, ],
+  [103.82, 36.06, 40, ],
+  [101.77, 36.62, 35, ],
+    //浙江、广东、四川三个有污水处理厂名字的坐标
+  [104.68, 31.47, 70, '绵阳市水务有限公司塘汛污水处理厂'],      // 绵阳涪城区坐标
+  [120.65, 27.96, 65, '温州市排水有限公司南片污水处理厂'],      // 温州瓯海区坐标
+  [113.25, 22.84, 75, '佛山市顺德区华盈环保水务有限公司'] // 顺德坐标
+];    //点的经纬度
 
 const initChinaMap = () => {
   const dom = document.getElementById('chinaMap')
@@ -185,27 +551,44 @@ const initChinaMap = () => {
             text: '中国地图数据展示',
             left: 'center',
             textStyle: {
-              color: '#333'
+              color: '#ffffff'
+            }
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: function(params) {
+              return params.data.value[3]; // 显示第四列的污水处理厂名称
             }
           },
           geo: {
             map: 'china',
             roam: false, // 允许缩放拖动
+            silent: false,          // 禁止geo组件触发事件
             label: {
               show: true,
-              color: '#4D4D4D'
+              color: '#ffffff'    //省名颜色
             },
             itemStyle: {
-              areaColor: '#F0F8FF',
-              borderColor: '#2973BB',
-              borderWidth: 1
+              areaColor: '#524cff',   //地图填色
+              borderColor: '#071142',   //地图描边
+              borderWidth: 1.5,
+
+              // 添加投影效果
+              shadowColor: '#5853ed',      // 阴影颜色
+              shadowBlur: 25,                         // 阴影模糊大小
+              shadowOffsetY: 8,                       // 垂直偏移量
+              shadowOffsetX: 8                        // 水平偏移量（保持垂直向下）
             },
             emphasis: {
               label: {
                 color: 'white'
               },
               itemStyle: {
-                areaColor: '#2973BB'
+                areaColor: '#2973BB',
+
+                shadowColor: 'rgba(0, 0, 0, 0.5)',    // 高亮状态加深阴影
+                shadowBlur: 15,
+                shadowOffsetY: 10
               }
             }
           },
@@ -310,9 +693,11 @@ const startAnimation = () => {
 const resizeHandler = () => {
   mapChart?.resize()
 }
-
-onMounted(() => {
+const DeepSeekMsg = ref("")
+onMounted(async () => {
   initChinaMap()
+  console.log(await fetchAIData())
+  DeepSeekMsg.value = await fetchAIData();
   window.addEventListener('resize', resizeHandler)
 })
 
@@ -320,28 +705,34 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeHandler)
   mapChart?.dispose()
 })
+const open = async () => {
+  ElMessageBox.alert(`${await fetchAIData()}`, 'DeepSeek建议', {confirmButtonText: '好的'})
+}
 </script>
 
 <template>
-  <!-- 新增顶部栏 -->
   <div class="container">
-    <div class="top-bar">
-      <div v-for="n in 5" :key="n" class="indicator">
-        指标 {{ n }}
-      </div>
-    </div>
 
     <div class="content-container">
       <div class="left-container">
-        <div class="l1-container">
-          <div id="l1Chart" class="chart"></div>
+        <div class="vertical-group">
+          <div class="vertical-title">资源能源消耗指标</div>
+          <div class="group-content">
+            <div class="l1-container">
+              <div id="l1Chart" class="chart"></div>
+            </div>
+            <div class="l2-container">
+              <div id="r2Chart" class="chart"></div>
+            </div>
+          </div>
         </div>
-        <div class="l2-container">
-          <div id="l2Chart" class="chart"></div>
+        <div class="vertical-group-rb">
+          <div class="vertical-title">产品特征指标</div>
+            <div class="l3-container">
+              <div id="l3Chart" class="chart"></div>
+            </div>
         </div>
-        <div class="l3-container">
-          <div id="l3Chart" class="chart"></div>
-        </div>
+
       </div>
 
       <div class="center-container">
@@ -351,35 +742,35 @@ onUnmounted(() => {
 
         <div class="center-bottom-container">
           <div class="scroller">
-            <a target="_blank" href="https://baijiahao.baidu.com/s?id=1720542580856660031" class="link-item">
-              碳循环的基本概念与原理
+            <a href="https://baijiahao.baidu.com/s?id=1775889772126267438&wfr=spider&for=pc" class="link-item">
+              污水处理厂节能降耗措施
             </a>
-            <a href="https://www.sohu.com/a/736656508_121124020" class="link-item">
-              “双碳”科普——基础知识篇
+            <a href="https://baijiahao.baidu.com/s?id=1814234949320393420&wfr=spider&for=pc" class="link-item">
+              污水处理厂常见问题及措施
             </a>
-            <a href="https://www.endress.com.cn/zh/sustainability-solutions" class="link-item">
-              工业领域的可持续发展解决方案
+            <a href="https://baijiahao.baidu.com/s?id=1775889772126267438&wfr=spider&for=pc" class="link-item">
+              污水处理厂能耗分析
             </a>
-            <a href="https://sdxw.iqilu.com/share/YS0yMS0xMzIzNjIwOQ%3D%3D.html" class="link-item">
-              碳达峰碳中和知识科普
+            <a href="https://baijiahao.baidu.com/s?id=1787943202869584373&wfr=spider&for=pc" class="link-item">
+              低碳评价的介绍
             </a>
-            <a href="https://sthjj.wenzhou.gov.cn/art/2022/4/27/art_1317648_58871462.html" class="link-item">
-              碳达峰碳中和知识科普
+            <a href="https://baijiahao.baidu.com/s?id=1823161362311551178&wfr=spider&for=pc" class="link-item">
+              打造污水处理绿色低碳标杆厂
             </a>
-            <a href="https://www.bilibili.com/video/BV16C4y127r4/?vd_source=2aba2a89a6ca10511b4f4eebb2808bdd" class="link-item">
-              双碳小知识——碳排放
+            <a href="https://zhuanlan.zhihu.com/p/388035480" class="link-item">
+              絮凝剂用量大的原因
             </a>
-            <a href="https://www.chinacaj.net/news/56799.html" class="link-item">
-              碳循环，你要知道的科普小知识
+            <a href="https://mbd.baidu.com/newspage/data/landingshare?id=1770999328247519264&third=baijiahao&baijiahao_id=1770999328247519264&wfr=&c_source=kunlun&c_score=0.999000&p_tk=1105bxiyearsqdYQ%2BT4fWNbk51NjjnysqkNuu%2B%2BZfrgAcEkyM%2FuqgPVEoi9kd54DR0jxClwpwe9DauWyGI2WycmhcIezhAdnJPlD9ligj%2B4fT6AKHsXTcyTrJv4IaLc4YdnP5FtrSn4Up0umN5TTk32knPm95R84tRzD8bmsDNBFh%2FM%3D&p_timestamp=1741964286&p_sign=4070dbb6abf73b04e52feb06fbcf372d&p_signature=550649ede44156534a4ad06c1a25dcbd&__pc2ps_ab=1105bxiyearsqdYQ%2BT4fWNbk51NjjnysqkNuu%2B%2BZfrgAcEkyM%2FuqgPVEoi9kd54DR0jxClwpwe9DauWyGI2WycmhcIezhAdnJPlD9ligj%2B4fT6AKHsXTcyTrJv4IaLc4YdnP5FtrSn4Up0umN5TTk32knPm95R84tRzD8bmsDNBFh%2FM%3D" class="link-item">
+              污水处理厂碳源大的原因
             </a>
-            <a href="https://rcees.cas.cn/kx/kxpj/kpwz/200911/t20091108_6825855.html" class="link-item">
-              碳循环和CO2排放
+            <a href="https://baijiahao.baidu.com/s?id=1822629588703146318&wfr=spider&for=pc" class="link-item">
+              污水处理中常见的问题及解决方法
             </a>
-            <a href="https://sisd.org.cn/express/express617.html" class="link-item">
-              双碳科普
+            <a href="https://baijiahao.baidu.com/s?id=1821486916594557296&wfr=spider&for=pc" class="link-item">
+              污水处理厂中泡沫问题及治理方案
             </a>
-            <a href="https://xn--6oq29spurowlws4a.cn/lore.html" class="link-item">
-              碳汇基础知识
+            <a href="https://mp.weixin.qq.com/s?__biz=MzU5NTM0NTE1NQ==&mid=2247516107&idx=3&sn=7dc421e6627f80df8e262b3c7fc6552c&chksm=ff5236fd81840bd9a414fa3967337c4234351aab6bbd6ab38d6806e344257bc8ad69f21aa4b4&scene=27" class="link-item">
+              污泥膨胀的原因及解决方法
             </a>
           </div>
         </div>
@@ -387,14 +778,21 @@ onUnmounted(() => {
 
       <!-- 右侧容器：再放三个图表 -->
       <div class="right-container">
-        <div class="r1-container">
-          <div id="r1Chart" class="chart"></div>
-        </div>
-        <div class="r2-container">
-          <div id="r2Chart" class="chart"></div>
+        <div class="vertical-group">
+          <div class="vertical-title">污染物产生指标</div>
+          <div class="group-content">
+            <div class="r1-container">
+              <div id="r1Chart" class="chart"></div>
+            </div>
+            <div class="r2-container">
+              <div id="l2Chart" class="chart"></div>
+            </div>
+          </div>
         </div>
         <div class="r3-container">
-            <h1>DeepSeek建议</h1>
+          <div class="-ds-container">
+            <h1 @click="open">DeepSeek建议</h1>
+          </div>
         </div>
       </div>
     </div>
@@ -403,35 +801,10 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* 新增顶部栏样式 */
-.top-bar {
-  height: 80px;
-  width: 90vw;
-  display: flex;
-  gap: 15px;
-  padding: 30px 20px 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+.-ds-container{
+  margin-top: 20%;
+  text-align: center;
 }
-
-.indicator {
-  flex: 1;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #000000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  transition: transform 0.2s;
-}
-
-.indicator:hover {
-  transform: translateY(-2px);
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0 4px 8px rgba(136, 136, 136, 0.12);
-}
-
 .content-container {
   height: calc(100vh - 80px);
   display: flex;
@@ -465,16 +838,59 @@ onUnmounted(() => {
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* 竖向排列容器 */
+.vertical-group {
+  display: flex;
+  margin-bottom: 20px;
+  height: 66%; /* 根据实际高度调整 */
+}
+.vertical-group-rb{
+  display: flex;
+  margin-bottom: 20px;
+  height: 34%; /* 根据实际高度调整 */
+
+}
+/* 竖向标题样式 */
+.vertical-title {
+
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  padding: 15px 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-right: 2px solid #ffffff;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* 组合内容区域 */
+.group-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 左侧每个图表区域：占满父容器宽度(100%)，高度各占1/3 */
 .l1-container,
-.l2-container,
-.l3-container {
+.l2-container{
   width: 98%;
-  height: 33.33%;
+  flex: 1;
+  height: 50%;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  border-bottom: 1px solid #fff;
+  transition: transform 0.3s, background 0.3s;
+}
+.l3-container {
+  flex: 1;
+  width: 100%;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
@@ -482,17 +898,18 @@ onUnmounted(() => {
 .l1-container:hover,
 .l2-container:hover,
 .l3-container:hover {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
 .r3-container{
+  align-items: center;
   text-align: center;
   color: #fff;
   width: 100%;
   height: 30%;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid #fff;
   border-radius: 5px;
   transition: transform 0.3s, background 0.3s;
@@ -501,17 +918,18 @@ onUnmounted(() => {
 .r1-container,
 .r2-container {
   width: 100%;
-  height: 33.33%;
+  flex: 1;
+  height: 50%;
   box-sizing: border-box;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid #fff;
   transition: transform 0.3s, background 0.3s;
 }
 .r1-container:hover,
 .r2-container:hover,
 .r3-container:hover {
-  background: rgba(255, 255, 255, 1.0);
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-5px); /* 鼠标悬停时上移5px，产生向前突起效果喵~ */
 }
 
@@ -526,10 +944,12 @@ onUnmounted(() => {
 .center-top-container {
   flex: 2;
   height: 100%;
-  background: white;
+
   border-radius: 8px;
   overflow: hidden;
   padding: 10px;
+
+  background:transparent ;
 }
 
 .map-chart {
@@ -542,7 +962,7 @@ onUnmounted(() => {
   flex: 1;
   overflow: hidden; /* 隐藏溢出内容 */
   position: relative;
-  background: #f5f7fa; /* 更柔和的背景色 */
+  background: linear-gradient(135deg, rgba(25, 25, 112, 0.5), rgba(173, 216, 230, 0.3));
   border-radius: 8px; /* 圆角 */
   padding: 15px 0;
 }
@@ -566,10 +986,10 @@ onUnmounted(() => {
   display: block;
   padding: 12px 20px;
   margin: 8px 15px;
-  background: white;
+  background: linear-gradient(135deg, rgba(25, 25, 112, 0.5), rgba(173, 216, 230, 0.3));
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  color: #409eff;
+  color: #eef8ff;
   text-decoration: none;
   transition: all 0.3s;
 }
