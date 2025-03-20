@@ -329,8 +329,8 @@ watch(
     <div class="footer-container">
       <transition name="fade" mode="out-in">
         <div class="calendar-box">
-          <h5>&nbsp</h5>
-          <h4>当前月份 物耗（碳源）碳排放强度最大</h4>
+          <h3>当前月份{{idx + 1}}月</h3>
+          <h4>物耗（碳源）碳排放强度最大</h4>
           <h4>碳排放强度：{{ Math.floor( tweened.number.toFixed(0))  }} kgCO₂/m³</h4>
         </div>
       </transition>
